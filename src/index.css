@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-warm-50 text-navy-700 font-sans antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  ::selection {
+    @apply bg-teal-500/20 text-navy-700;
+  }
+
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-teal-500;
+  }
+}
+
+@layer components {
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-navy-700 focus:text-white;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-8xl px-6 sm:px-8 lg:px-12;
+  }
+
+  .container-narrow {
+    @apply mx-auto w-full max-w-4xl px-6 sm:px-8 lg:px-12;
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .grid-pattern-dark {
+    background-image:
+      linear-gradient(to right, rgba(16, 36, 58, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(16, 36, 58, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  scroll-padding-top: 6rem;
+}
