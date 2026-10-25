@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, Search, ChevronDown, X, ArrowRight, Phone, Mail, MapPin, Factory } from 'lucide-react';
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { products, categoryLabels, type ProductCategory } from '@/data/products';
 import { siteConfig } from '@/data/site';
+import { TemplateLink as Link, useTemplate, getSubpathWithoutTemplate } from '@/context/TemplateContext';
 
 const categoryOrder: ProductCategory[] = ['dosing-handling', 'preparation', 'accessories'];
 
@@ -34,6 +35,8 @@ export function Header() {
   const [expandedCategory, setExpandedCategory] = useState<ProductCategory | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const { tPath } = useTemplate();
+  const currentSubpath = getSubpathWithoutTemplate(location.pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -58,7 +61,7 @@ export function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/solutions?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(tPath(`/solutions?q=${encodeURIComponent(searchQuery.trim())}`));
       setSearchOpen(false);
       setSearchQuery('');
     }
@@ -131,7 +134,7 @@ export function Header() {
                 to="/"
                 className={cn(
                   'px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                  location.pathname === '/' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
+                  currentSubpath === '/' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                 )}
               >
                 Home
@@ -145,7 +148,7 @@ export function Header() {
                 <button
                   className={cn(
                     'flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                    location.pathname.startsWith('/solutions') || megaMenuOpen ? 'text-teal-600 bg-warm-50' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
+                    currentSubpath.startsWith('/solutions') || megaMenuOpen ? 'text-teal-600 bg-warm-50' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                   )}
                   aria-expanded={megaMenuOpen}
                   aria-haspopup="true"
@@ -160,7 +163,7 @@ export function Header() {
                 to="/about"
                 className={cn(
                   'px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                  location.pathname === '/about' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
+                  currentSubpath === '/about' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                 )}
               >
                 About
@@ -170,7 +173,7 @@ export function Header() {
                 to="/contact"
                 className={cn(
                   'px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                  location.pathname === '/contact' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
+                  currentSubpath === '/contact' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                 )}
               >
                 Contact

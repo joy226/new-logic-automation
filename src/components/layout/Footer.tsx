@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { TemplateLink as Link } from '@/context/TemplateContext';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { siteConfig } from '@/data/site';
 import { products, categoryLabels, type ProductCategory } from '@/data/products';
