@@ -8,7 +8,9 @@ import {
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { SmartImage } from '@/components/ui/smart-image';
+import { cn } from '@/lib/utils';
 import { images } from '@/lib/images';
 import { products, categoryLabels, categoryDescriptions, type ProductCategory } from '@/data/products';
 import { siteConfig, processStages } from '@/data/site';
@@ -42,7 +44,6 @@ export function HomePage() {
       <FeaturedSystemsSection />
       <BenefitsSection />
       <CompanyIntroSection />
-      <CustomerReferencesSection />
       <ClientLogoGridSection />
       <ClientTrustSection />
       <FinalEnquirySection />
@@ -64,16 +65,16 @@ function HeroSection() {
         <div className="absolute inset-0 bg-navy-900/70" />
         <div className="absolute inset-0 grid-pattern opacity-40" />
       </div>
-      <div className="container-page relative py-24 lg:py-32">
+      <div className="container-page relative pt-32 pb-24 lg:pt-36 lg:pb-32">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="max-w-3xl"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-semibold text-teal-300 backdrop-blur-sm">
-            <Factory className="h-3.5 w-3.5" />
-            Experts since 2006 · Food & process industries
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-[11px] sm:text-xs sm:px-4 font-semibold text-teal-300 backdrop-blur-sm max-w-full">
+            <Factory className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">Experts since 2006 · Food & process industries</span>
           </span>
           <h1 className="mt-6 text-display font-heading text-white">
             Precision handling.<br />Consistent production.
@@ -143,7 +144,7 @@ function SolutionDiscoverySection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
           {categoryOrder.map((cat, i) => {
             const Icon = categoryIcons[cat];
             const count = products.filter(p => p.category === cat).length;
@@ -152,28 +153,30 @@ function SolutionDiscoverySection() {
                 key={cat}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
+                viewport={{ once: true, margin: '0px' }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
+                className="h-full flex"
               >
                 <Link
                   to={`/solutions?category=${cat}`}
-                  className="group block rounded-xl border border-warm-200 bg-white overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300"
+                  className="group flex flex-col w-full h-full rounded-xl border border-warm-200 bg-white overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300"
                 >
                   <SmartImage
                     src={categoryImages[cat]}
                     alt={categoryLabels[cat]}
-                    className="transition-transform duration-500 group-hover:scale-[1.02]"
+                    aspectRatio="aspect-[16/10]"
+                    className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   />
-                  <div className="p-6">
+                  <div className="p-6 flex flex-col flex-1">
                     <div className="flex items-center gap-3 mb-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50">
                         <Icon className="h-5 w-5 text-teal-600" />
                       </div>
-                      <span className="text-xs font-semibold text-warm-400">{count} systems</span>
+                      <Badge variant="teal" className="text-xs font-semibold">{count} systems</Badge>
                     </div>
                     <h3 className="text-h4 font-heading text-navy-700 mb-2">{categoryLabels[cat]}</h3>
-                    <p className="text-sm text-warm-500 leading-relaxed mb-4">{categoryDescriptions[cat]}</p>
-                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 group-hover:gap-2.5 transition-all">
+                    <p className="text-sm text-warm-500 leading-relaxed mb-6 flex-1">{categoryDescriptions[cat]}</p>
+                    <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 group-hover:gap-2.5 transition-all">
                       Explore <ArrowRight className="h-4 w-4" />
                     </span>
                   </div>
@@ -281,37 +284,43 @@ function FeaturedSystemsSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {featured.map((p, i) => (
             <motion.div
               key={p.slug}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
+              viewport={{ once: true, margin: '0px' }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
+              className="h-full flex"
             >
               <Link
                 to={`/systems/${p.slug}`}
-                className="group grid grid-cols-1 sm:grid-cols-2 rounded-xl border border-warm-200 bg-white overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300"
+                className="group grid grid-cols-1 sm:grid-cols-2 w-full h-full rounded-xl border border-warm-200 bg-white overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300"
               >
-                <SmartImage
-                  src={images.products[p.slug] ?? images.categoryDosing}
-                  alt={p.name}
-                  className="transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-                <div className="p-6 flex flex-col">
-                  <span className="text-xs font-semibold text-warm-400 mb-2">{p.categoryLabel}</span>
-                  <h3 className="text-h4 font-heading text-navy-700 mb-2">{p.name}</h3>
-                  <p className="text-sm text-warm-500 leading-relaxed mb-4 flex-1">{p.shortDescription}</p>
-                  <ul className="space-y-1.5 mb-4">
-                    {p.benefits.slice(0, 2).map(b => (
-                      <li key={b} className="flex items-start gap-2 text-xs text-warm-600">
-                        <CheckCircle2 className="h-4 w-4 text-teal-500 shrink-0 mt-0.5" />
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 group-hover:gap-2.5 transition-all">
+                <div className="relative min-h-[220px] sm:min-h-full h-56 sm:h-auto w-full overflow-hidden bg-warm-100">
+                  <SmartImage
+                    src={images.products[p.slug] ?? images.categoryDosing}
+                    alt={p.name}
+                    aspectRatio=""
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="p-6 flex flex-col justify-between">
+                  <div>
+                    <span className="text-xs font-semibold text-warm-400 mb-2 block">{p.categoryLabel}</span>
+                    <h3 className="text-h4 font-heading text-navy-700 mb-2">{p.name}</h3>
+                    <p className="text-sm text-warm-500 leading-relaxed mb-4">{p.shortDescription}</p>
+                    <ul className="space-y-1.5 mb-5">
+                      {p.benefits.slice(0, 2).map(b => (
+                        <li key={b} className="flex items-start gap-2 text-xs text-warm-600">
+                          <CheckCircle2 className="h-4 w-4 text-teal-500 shrink-0 mt-0.5" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 group-hover:gap-2.5 transition-all pt-2">
                     View System <ArrowRight className="h-4 w-4" />
                   </span>
                 </div>
@@ -363,7 +372,7 @@ function BenefitsSection() {
                 key={b.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
+                viewport={{ once: true, margin: '0px' }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
                 className="rounded-xl border border-warm-200 bg-warm-50 p-6"
               >
@@ -389,7 +398,7 @@ function CompanyIntroSection() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: '0px' }}
             transition={{ duration: 0.5 }}
           >
             <SmartImage
@@ -402,7 +411,7 @@ function CompanyIntroSection() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
+            viewport={{ once: true, margin: '0px' }}
             transition={{ duration: 0.5 }}
           >
             <span className="text-xs font-bold uppercase tracking-wider text-teal-600">About New Logic Automation</span>
@@ -427,81 +436,125 @@ function CompanyIntroSection() {
   );
 }
 
-function CustomerReferencesSection() {
-  return (
-    <section className="py-20 lg:py-24 bg-navy-700 text-white">
-      <div className="container-page">
-        <div className="max-w-2xl mb-12">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Customer References</span>
-          <h2 className="mt-3 text-h2 font-heading text-white">Food manufacturers who have used our systems</h2>
-          <p className="mt-4 text-warm-300 leading-relaxed text-sm">
-            The following companies are listed on the existing New Logic Automation website as customers. This is a reference list, not a new endorsement.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-teal-400 mb-4">Domestic (India)</h3>
-            <div className="flex flex-wrap gap-3">
-              {siteConfig.customersDomestic.map(name => (
-                <div
-                  key={name}
-                  className="rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-warm-200"
-                >
-                  {name}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-teal-400 mb-4">International</h3>
-            <div className="flex flex-wrap gap-3">
-              {siteConfig.customersInternational.map(name => (
-                <div
-                  key={name}
-                  className="rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-warm-200"
-                >
-                  {name}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+
+interface ClientItem {
+  name: string;
+  shortName: string;
+  type: 'Domestic' | 'International';
+  logoUrl: string;
+}
+
+const domesticClients: ClientItem[] = [
+  { name: 'Britannia Industries Ltd.', shortName: 'Britannia', type: 'Domestic', logoUrl: '/clients/britannia-industries.png' },
+  { name: 'ITC Ltd.', shortName: 'ITC Limited', type: 'Domestic', logoUrl: '/clients/itc-ltd.png' },
+  { name: 'Haldiram Foods International Pvt. Ltd.', shortName: 'Haldiram’s', type: 'Domestic', logoUrl: '/clients/haldiram-foods-international.png' },
+  { name: 'Parle Products Pvt. Ltd.', shortName: 'Parle', type: 'Domestic', logoUrl: '/clients/parle.jpg' },
+  { name: 'Patanjali Ayurved Ltd.', shortName: 'Patanjali', type: 'Domestic', logoUrl: '/clients/patanjali-ayurved.jpg' },
+  { name: 'Unibic Foods India Pvt. Ltd.', shortName: 'Unibic', type: 'Domestic', logoUrl: '/clients/unibic-foods-india.png' },
+  { name: 'Bikaji Foods International Ltd.', shortName: 'Bikaji', type: 'Domestic', logoUrl: '/clients/bikaji.jpg' },
+  { name: 'Anmol Industries Ltd.', shortName: 'Anmol', type: 'Domestic', logoUrl: '/clients/anmol-industries.png' },
+  { name: 'Sobisco (Sona Biscuits)', shortName: 'Sobisco', type: 'Domestic', logoUrl: '/clients/sobisco.jpg' },
+  { name: 'Raja Udyog Pvt. Ltd.', shortName: 'Raja Udyog', type: 'Domestic', logoUrl: '/clients/raja-udyog.png' },
+  { name: 'Bonn Nutrients Pvt. Ltd.', shortName: 'Bonn', type: 'Domestic', logoUrl: '/clients/bonn-nutrients.jpg' },
+  { name: 'Dukes Products (India) Ltd.', shortName: 'Dukes', type: 'Domestic', logoUrl: '/clients/dukes-products.jpg' },
+  { name: 'Bhagwati Foods Pvt. Ltd.', shortName: 'Bhagwati', type: 'Domestic', logoUrl: '/clients/bhagwati-foods.jpg' },
+  { name: 'Mrs. Bector Food Specialities Ltd', shortName: 'Cremica', type: 'Domestic', logoUrl: '/clients/mrs.-bector-food-specialities.png' },
+  { name: 'Sunder Biscuits', shortName: 'Sunder', type: 'Domestic', logoUrl: '/clients/sunder.jpg' },
+  { name: 'HF Super (Chanakya Bakery)', shortName: 'HF Super', type: 'Domestic', logoUrl: '/clients/hf-super.jpg' },
+];
+
+const internationalClients: ClientItem[] = [
+  { name: 'Britannia Nepal Ltd.', shortName: 'Britannia Nepal', type: 'International', logoUrl: '/clients/britannia-nepal.png' },
+  { name: 'Pran Foods Ltd.', shortName: 'PRAN Foods', type: 'International', logoUrl: '/clients/pran-foods-ltd.jpg' },
+  { name: 'Kwality Noodles Industries (P) Ltd.', shortName: 'Kwality', type: 'International', logoUrl: '/clients/kwality-noodles-industries.png' },
+  { name: 'Asian Biscuit & Confectionery Pvt. Ltd.', shortName: 'Asian Biscuit', type: 'International', logoUrl: '/clients/asian-biscuit-and-confectionery.png' },
+  { name: 'Khajurico Nepal Pvt. Ltd.', shortName: 'Khajurico', type: 'International', logoUrl: '/clients/khajurico-nepal.jpg' },
+  { name: 'Ifad Multi Products Ltd.', shortName: 'IFAD Group', type: 'International', logoUrl: '/clients/ifad-multi-products.png' },
+  { name: 'Lae Biscuit Co. Ltd.', shortName: 'Lae Biscuit', type: 'International', logoUrl: '/clients/lae-biscuit.png' },
+  { name: 'Reedisha Foods Ltd.', shortName: 'Reedisha', type: 'International', logoUrl: '/clients/reedisha-foods.jpg' },
+  { name: 'Koshambh Multitred Pvt Ltd', shortName: 'Koshambh', type: 'International', logoUrl: '/clients/koshambh.jpg' },
+  { name: 'Marino Biscuits', shortName: 'Marino', type: 'International', logoUrl: '/clients/marino.jpg' },
+  { name: 'Mio Biscuits', shortName: 'Mio Biscuits', type: 'International', logoUrl: '/clients/mio-biscuits.jpg' },
+  { name: 'Gattani’s OPG Group', shortName: 'Gattani’s', type: 'International', logoUrl: '/clients/gattanis.jpg' },
+];
+
+function ClientLogoCard({ client }: { client: ClientItem }) {
+  const [imgError, setImgError] = useState(false);
+
+  return (
+    <div
+      className={cn(
+        'group flex items-center gap-3.5 px-4 py-3 rounded-xl border border-warm-200 bg-white shadow-subtle hover:shadow-card hover:border-teal-300 transition-all duration-300 min-w-[280px] max-w-[310px] shrink-0 select-none cursor-pointer'
+      )}
+    >
+      <div className="flex h-12 w-20 shrink-0 items-center justify-center rounded-lg bg-warm-50/60 p-1.5 border border-warm-100 overflow-hidden group-hover:border-teal-200 transition-colors">
+        {!imgError ? (
+          <img
+            src={client.logoUrl}
+            alt={`${client.name} logo`}
+            loading="lazy"
+            className="max-h-9 max-w-[70px] w-auto h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <span className="font-heading font-black text-xs text-navy-700">
+            {client.shortName.slice(0, 3).toUpperCase()}
+          </span>
+        )}
       </div>
-    </section>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-1 mb-0.5">
+          <p className="font-heading text-sm font-bold text-navy-800 truncate group-hover:text-teal-600 transition-colors">
+            {client.shortName}
+          </p>
+          <Badge variant={client.type === 'Domestic' ? 'default' : 'teal'} className="text-[10px] px-1.5 py-0 font-medium shrink-0">
+            {client.type === 'Domestic' ? 'India' : 'Export'}
+          </Badge>
+        </div>
+        <p className="text-xs text-warm-500 truncate" title={client.name}>
+          {client.name}
+        </p>
+      </div>
+    </div>
   );
 }
 
 function ClientLogoGridSection() {
-  const allCustomers = [...siteConfig.customersDomestic, ...siteConfig.customersInternational];
-
   return (
-    <section className="border-b border-warm-200 bg-white py-16 lg:py-20">
-      <div className="container-page">
-        <div className="mb-10 text-center">
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-600">Trusted by manufacturers</span>
-          <h2 className="mt-3 text-h2 font-heading text-navy-700">Partners &amp; clients</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-warm-500">
-            Food manufacturers across India and internationally rely on New Logic Automation systems for their material handling and preparation needs.
-          </p>
+    <section className="border-b border-warm-200 bg-white py-16 lg:py-24 overflow-hidden">
+      <div className="container-page mb-10 text-center">
+        <span className="text-xs font-bold uppercase tracking-wider text-teal-600">Industrial Track Record</span>
+        <h2 className="mt-3 text-h2 font-heading text-navy-700">Partners &amp; clients</h2>
+        <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-warm-500">
+          Leading commercial food manufacturers across India and internationally rely on New Logic Automation systems for automated material conveying, accurate dosing, and recipe preparation.
+        </p>
+      </div>
+
+      <div className="relative w-full space-y-4">
+        {/* Row 1: Domestic moving left */}
+        <div className="mask-marquee overflow-hidden">
+          <div className="animate-marquee flex gap-4">
+            {[...domesticClients, ...domesticClients].map((client, idx) => (
+              <ClientLogoCard key={`${client.name}-d1-${idx}`} client={client} />
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6 lg:gap-5">
-          {allCustomers.map((name, index) => (
-            <motion.div
-              key={name}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.3, delay: Math.min(index * 0.04, 0.4) }}
-              className="flex h-24 items-center justify-center rounded-lg border border-warm-200 bg-warm-50 px-3 text-center transition-all hover:border-teal-300 hover:bg-white hover:shadow-subtle"
-            >
-              <span className="text-xs font-semibold leading-tight text-warm-500 hover:text-navy-600 transition-colors">
-                {name}
-              </span>
-            </motion.div>
-          ))}
+        {/* Row 2: International moving right */}
+        <div className="mask-marquee overflow-hidden">
+          <div className="animate-marquee-reverse flex gap-4">
+            {[...internationalClients, ...internationalClients].map((client, idx) => (
+              <ClientLogoCard key={`${client.name}-i1-${idx}`} client={client} />
+            ))}
+          </div>
         </div>
+      </div>
+
+      <div className="container-page mt-8 text-center">
+        <p className="text-xs text-warm-400">
+          Hover over any partner badge to pause. Installed systems operating continuously across India, Nepal, Bangladesh, and Papua New Guinea.
+        </p>
       </div>
     </section>
   );

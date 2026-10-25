@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ClipboardCopy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -31,6 +31,8 @@ export function EnquiryForm({ defaultSystem, compact = false }: EnquiryFormProps
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const lastSubmission = useRef<string>('');
 
   const {
     register,
@@ -38,7 +40,6 @@ export function EnquiryForm({ defaultSystem, compact = false }: EnquiryFormProps
     formState: { errors },
     reset,
     setValue,
-    watch,
   } = useForm<EnquiryFormData>({
     resolver: zodResolver(enquirySchema),
     defaultValues: {
@@ -47,24 +48,53 @@ export function EnquiryForm({ defaultSystem, compact = false }: EnquiryFormProps
     },
   });
 
-  const privacyAck = watch('privacyAck');
+  const formatEnquiryText = (data: EnquiryFormData): string => {
+    const systemName = data.systemOfInterest
+      ? products.find(p => p.slug === data.systemOfInterest)?.name ?? data.systemOfInterest
+      : 'General enquiry';
+    return `Name: ${data.name}\nCompany: ${data.company}\nEmail: ${data.email}\nPhone: ${data.phone ?? '—'}\nSystem of interest: ${systemName}\n\nRequirements:\n${data.requirements}`;
+  };
 
   const onSubmit = async (data: EnquiryFormData) => {
     setSubmitting(true);
     setSubmitError(false);
     try {
       await new Promise(resolve => setTimeout(resolve, 800));
+
+      const enquiryText = formatEnquiryText(data);
+      lastSubmission.current = enquiryText;
+
       const subject = encodeURIComponent(`Enquiry from ${data.name} — ${data.company}`);
-      const body = encodeURIComponent(
-        `Name: ${data.name}\nCompany: ${data.company}\nEmail: ${data.email}\nPhone: ${data.phone ?? '—'}\nSystem of interest: ${data.systemOfInterest ?? 'General enquiry'}\n\nRequirements:\n${data.requirements}`
-      );
+      const body = encodeURIComponent(enquiryText);
       window.location.href = `mailto:logicequip@gmail.com?subject=${subject}&body=${body}`;
+
       setSubmitted(true);
-      reset();
+      // Delay reset so mailto has time to open with data
+      setTimeout(() => reset(), 500);
     } catch {
       setSubmitError(true);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(lastSubmission.current);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Fallback for older browsers
+      const textarea = document.createElement('textarea');
+      textarea.value = lastSubmission.current;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     }
   };
 
@@ -78,11 +108,22 @@ export function EnquiryForm({ defaultSystem, compact = false }: EnquiryFormProps
         </div>
         <h3 className="font-heading text-lg font-bold text-teal-800 mb-1">Enquiry prepared</h3>
         <p className="text-sm text-teal-700 mb-4">
-          Your email client should have opened with your enquiry details. If it didn't, please email us directly at logicequip@gmail.com.
+          Your email client should have opened with your enquiry details. If it didn't, copy the enquiry below and email us directly at logicequip@gmail.com.
         </p>
-        <Button variant="outline" size="sm" onClick={() => setSubmitted(false)}>
-          Send another enquiry
-        </Button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleCopy}
+            className="gap-2"
+          >
+            {copied ? <Check className="h-4 w-4" /> : <ClipboardCopy className="h-4 w-4" />}
+            {copied ? 'Copied!' : 'Copy Enquiry to Clipboard'}
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => { setSubmitted(false); setCopied(false); }}>
+            Send another enquiry
+          </Button>
+        </div>
       </div>
     );
   }

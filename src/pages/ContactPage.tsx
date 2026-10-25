@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Phone, Mail, MapPin } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { SmartImage } from '@/components/ui/smart-image';
 import { EnquiryForm } from '@/components/EnquiryForm';
@@ -8,6 +7,8 @@ import { siteConfig } from '@/data/site';
 import { images } from '@/lib/images';
 
 export function ContactPage() {
+  const [searchParams] = useSearchParams();
+  const systemParam = searchParams.get('system') || undefined;
   return (
     <>
       <SEO
@@ -17,7 +18,7 @@ export function ContactPage() {
       />
 
       {/* Hero */}
-      <section className="bg-navy-700 text-white py-16 lg:py-20">
+      <section className="bg-navy-700 text-white pt-32 pb-16 lg:pt-36 lg:pb-20">
         <div className="container-page">
           <nav className="text-xs text-warm-400 mb-4" aria-label="Breadcrumb">
             <Link to="/" className="hover:text-teal-400">Home</Link>
@@ -102,7 +103,7 @@ export function ContactPage() {
                 <p className="text-sm text-warm-500 mb-6">
                   Fill in the form below. You don't need to know the exact system — a general description of your project is enough to start the conversation.
                 </p>
-                <EnquiryForm />
+                <EnquiryForm defaultSystem={systemParam} />
               </div>
             </div>
           </div>

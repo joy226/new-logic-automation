@@ -7,8 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SmartImage } from '@/components/ui/smart-image';
 import { cn } from '@/lib/utils';
-import { images } from '@/lib/images';
-import { products, categoryLabels, categoryDescriptions, type ProductCategory } from '@/data/products';
+import { products, categoryLabels, type ProductCategory } from '@/data/products';
 
 const categoryOrder: ProductCategory[] = ['dosing-handling', 'preparation', 'accessories'];
 const categoryIcons: Record<ProductCategory, React.ElementType> = {
@@ -68,7 +67,7 @@ export function SolutionsPage() {
         path="/solutions"
       />
       {/* Header band */}
-      <section className="bg-navy-700 text-white py-16 lg:py-20">
+      <section className="bg-navy-700 text-white pt-32 pb-16 lg:pt-36 lg:pb-20">
         <div className="container-page">
           <nav className="text-xs text-warm-400 mb-4" aria-label="Breadcrumb">
             <Link to="/" className="hover:text-teal-400">Home</Link>
@@ -83,7 +82,7 @@ export function SolutionsPage() {
       </section>
 
       {/* Search and filters */}
-      <section className="sticky top-16 z-30 bg-white/95 backdrop-blur-md border-b border-warm-100">
+      <section className="sticky top-[108px] sm:top-[112px] z-30 bg-white/95 backdrop-blur-md border-b border-warm-100 shadow-xs">
         <div className="container-page py-4">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -105,15 +104,26 @@ export function SolutionsPage() {
                 </button>
               )}
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 overflow-x-auto pb-1 -mx-2 px-2 sm:mx-0 sm:px-0 sm:overflow-visible">
+              <button
+                onClick={() => updateParam('category', '')}
+                className={cn(
+                  'px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap shrink-0',
+                  !category
+                    ? 'bg-teal-500 text-white shadow-xs'
+                    : 'bg-warm-100 text-warm-500 hover:bg-warm-200'
+                )}
+              >
+                All Systems
+              </button>
               {categoryOrder.map(cat => (
                 <button
                   key={cat}
                   onClick={() => updateParam('category', category === cat ? '' : cat)}
                   className={cn(
-                    'px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap',
+                    'px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap shrink-0',
                     category === cat
-                      ? 'bg-teal-500 text-white'
+                      ? 'bg-teal-500 text-white shadow-xs'
                       : 'bg-warm-100 text-warm-500 hover:bg-warm-200'
                   )}
                 >

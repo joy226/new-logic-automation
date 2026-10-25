@@ -2,12 +2,11 @@ import { Link, useParams, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle2, Phone, Mail, ChevronRight,
-  Settings2, ListChecks, Info, Wrench, Layers,
+  Settings2, Info, Wrench, Layers,
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { SmartImage } from '@/components/ui/smart-image';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { EnquiryForm } from '@/components/EnquiryForm';
 import { getProductBySlug, getRelatedProducts } from '@/data/products';
 import { siteConfig } from '@/data/site';
@@ -32,7 +31,7 @@ export function SystemPage() {
       />
 
       {/* Hero section */}
-      <section className="bg-navy-700 text-white py-16 lg:py-20">
+      <section className="bg-navy-700 text-white pt-32 pb-16 lg:pt-36 lg:pb-20">
         <div className="container-page">
           <nav className="text-xs text-warm-400 mb-6 flex items-center flex-wrap gap-1" aria-label="Breadcrumb">
             <Link to="/" className="hover:text-teal-400">Home</Link>
@@ -55,7 +54,7 @@ export function SystemPage() {
               <p className="mt-4 text-lg text-warm-300 leading-relaxed">{product.purpose}</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button asChild size="lg" variant="primary">
-                  <Link to="/contact">Enquire About This System <ArrowRight className="h-4 w-4" /></Link>
+                  <a href="#enquire">Enquire About This System <ArrowRight className="h-4 w-4" /></a>
                 </Button>
                 <Button asChild size="lg" variant="outline-light">
                   <a href={`tel:${siteConfig.phoneNumbers[0].number.replace(/\s/g, '')}`}>
@@ -96,7 +95,7 @@ export function SystemPage() {
                 key={b}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
+                viewport={{ once: true, margin: '0px' }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
                 className="rounded-xl border border-warm-200 bg-white p-6"
               >
@@ -133,7 +132,7 @@ export function SystemPage() {
                     key={i}
                     initial={{ opacity: 0, x: 16 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: '-60px' }}
+                    viewport={{ once: true, margin: '0px' }}
                     transition={{ duration: 0.4, delay: i * 0.1 }}
                     className="relative flex gap-5 pb-8 last:pb-0"
                   >
@@ -204,7 +203,7 @@ export function SystemPage() {
       </section>
 
       {/* Enquiry form */}
-      <section className="py-16 lg:py-20 bg-navy-700 text-white">
+      <section id="enquire" className="py-16 lg:py-20 bg-navy-700 text-white">
         <div className="container-page">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>

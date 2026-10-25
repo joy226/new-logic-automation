@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Mail, MapPin, Factory, Layers, Settings2, Workflow } from 'lucide-react';
+import { ArrowRight, MapPin, Factory, Layers, Settings2, Workflow } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { SmartImage } from '@/components/ui/smart-image';
@@ -20,7 +20,7 @@ export function AboutPage() {
       />
 
       {/* Hero */}
-      <section className="bg-navy-700 text-white py-16 lg:py-24">
+      <section className="bg-navy-700 text-white pt-32 pb-16 lg:pt-36 lg:pb-24">
         <div className="container-page">
           <nav className="text-xs text-warm-400 mb-4" aria-label="Breadcrumb">
             <Link to="/" className="hover:text-teal-400">Home</Link>
@@ -45,7 +45,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
+              viewport={{ once: true, margin: '0px' }}
               transition={{ duration: 0.5 }}
             >
               <SmartImage
@@ -58,7 +58,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
+              viewport={{ once: true, margin: '0px' }}
               transition={{ duration: 0.5 }}
             >
               <span className="text-xs font-bold uppercase tracking-wider text-teal-600">What We Do</span>
@@ -105,7 +105,7 @@ export function AboutPage() {
                   key={item.title}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-80px' }}
+                  viewport={{ once: true, margin: '0px' }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
                   className="rounded-xl border border-warm-200 bg-warm-50 p-6"
                 >
@@ -136,7 +136,7 @@ export function AboutPage() {
                   key={cat}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-80px' }}
+                  viewport={{ once: true, margin: '0px' }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
                   className="rounded-xl border border-warm-200 bg-white p-6"
                 >
@@ -181,7 +181,7 @@ export function AboutPage() {
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: '-80px' }}
+              viewport={{ once: true, margin: '0px' }}
               transition={{ duration: 0.5 }}
             >
               <SmartImage
