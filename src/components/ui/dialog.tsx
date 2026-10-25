@@ -38,7 +38,7 @@ const DialogContent = forwardRef<
       {...props}
     >
       {children}
-      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1 text-warm-400 hover:bg-warm-100 hover:text-navy-700 transition-colors">
+      <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg p-1 text-warm-400 hover:bg-warm-100 hover:text-navy-900 transition-colors">
         <X className="h-5 w-5" />
         <span className="sr-only">Close</span>
       </DialogPrimitive.Close>
@@ -58,7 +58,7 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn('text-h3 font-heading text-navy-700', className)}
+    className={cn('text-h3 font-heading text-navy-900', className)}
     {...props}
   />
 ));

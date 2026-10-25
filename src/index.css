@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,14 +7,12 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    overflow-x: clip;
   }
 
   body {
-    @apply bg-warm-50 text-navy-700 font-sans antialiased;
+    @apply bg-white text-navy-900 font-sans antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: clip;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -22,7 +20,7 @@
   }
 
   ::selection {
-    @apply bg-teal-500/20 text-navy-700;
+    @apply bg-navy-900 text-white;
   }
 
   *:focus-visible {
@@ -32,7 +30,7 @@
 
 @layer components {
   .skip-link {
-    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-navy-700 focus:text-white;
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-navy-900 focus:text-white;
   }
 
   .container-page {
@@ -52,44 +50,10 @@
 
   .grid-pattern-dark {
     background-image:
-      linear-gradient(to right, rgba(16, 36, 58, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(16, 36, 58, 0.05) 1px, transparent 1px);
+      linear-gradient(to right, rgba(10, 26, 54, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 26, 54, 0.04) 1px, transparent 1px);
     background-size: 40px 40px;
   }
-
-  .mask-marquee {
-    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
-  }
-}
-
-@keyframes marquee {
-  from { transform: translateX(0%); }
-  to { transform: translateX(-50%); }
-}
-
-@keyframes marquee-reverse {
-  from { transform: translateX(-50%); }
-  to { transform: translateX(0%); }
-}
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 45s linear infinite;
-  will-change: transform;
-}
-
-.animate-marquee-reverse {
-  display: flex;
-  width: max-content;
-  animation: marquee-reverse 45s linear infinite;
-  will-change: transform;
-}
-
-.animate-marquee:hover,
-.animate-marquee-reverse:hover {
-  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -102,5 +66,5 @@
 }
 
 html {
-  scroll-padding-top: 8rem;
+  scroll-padding-top: 5rem;
 }

@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { SmartImage } from '@/components/ui/smart-image';
 import { cn } from '@/lib/utils';
-import { products, categoryLabels, type ProductCategory } from '@/data/products';
+import { images } from '@/lib/images';
+import { products, categoryLabels, categoryDescriptions, type ProductCategory } from '@/data/products';
 
 const categoryOrder: ProductCategory[] = ['dosing-handling', 'preparation', 'accessories'];
 const categoryIcons: Record<ProductCategory, React.ElementType> = {
@@ -67,22 +68,22 @@ export function SolutionsPage() {
         path="/solutions"
       />
       {/* Header band */}
-      <section className="bg-navy-700 text-white pt-32 pb-16 lg:pt-36 lg:pb-20">
+      <section className="bg-navy-900 text-white py-16 lg:py-20">
         <div className="container-page">
-          <nav className="text-xs text-warm-400 mb-4" aria-label="Breadcrumb">
+          <nav className="text-xs text-white/50 mb-4" aria-label="Breadcrumb">
             <Link to="/" className="hover:text-teal-400">Home</Link>
             <span className="mx-2">/</span>
-            <span className="text-warm-200">Solutions</span>
+            <span className="text-white/80">Solutions</span>
           </nav>
           <h1 className="text-h1 font-heading text-white mb-4">Solutions Directory</h1>
-          <p className="text-warm-300 leading-relaxed max-w-2xl">
+          <p className="text-white/70 leading-relaxed max-w-2xl">
             Search our complete range of material handling, dosing, preparation systems, and accessories. Filter by category or search by system name or material.
           </p>
         </div>
       </section>
 
       {/* Search and filters */}
-      <section className="sticky top-[108px] sm:top-[112px] z-30 bg-white/95 backdrop-blur-md border-b border-warm-100 shadow-xs">
+      <section className="sticky top-14 lg:top-[6.25rem] z-30 bg-white/95 backdrop-blur-md border-b border-warm-200">
         <div className="container-page py-4">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -97,34 +98,23 @@ export function SolutionsPage() {
               {query && (
                 <button
                   onClick={() => updateParam('q', '')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-warm-400 hover:text-navy-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-warm-400 hover:text-navy-900"
                   aria-label="Clear search"
                 >
                   <X className="h-4 w-4" />
                 </button>
               )}
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1 -mx-2 px-2 sm:mx-0 sm:px-0 sm:overflow-visible">
-              <button
-                onClick={() => updateParam('category', '')}
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap shrink-0',
-                  !category
-                    ? 'bg-teal-500 text-white shadow-xs'
-                    : 'bg-warm-100 text-warm-500 hover:bg-warm-200'
-                )}
-              >
-                All Systems
-              </button>
+            <div className="flex gap-2">
               {categoryOrder.map(cat => (
                 <button
                   key={cat}
                   onClick={() => updateParam('category', category === cat ? '' : cat)}
                   className={cn(
-                    'px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap shrink-0',
+                    'px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap border',
                     category === cat
-                      ? 'bg-teal-500 text-white shadow-xs'
-                      : 'bg-warm-100 text-warm-500 hover:bg-warm-200'
+                      ? 'bg-teal-500 text-white border-teal-500'
+                      : 'border-warm-200 text-warm-500 hover:border-navy-300 hover:text-navy-900'
                   )}
                 >
                   {categoryLabels[cat].split(' & ')[0]}
@@ -150,10 +140,10 @@ export function SolutionsPage() {
         <div className="container-page">
           {filtered.length === 0 ? (
             <div className="text-center py-20">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-warm-100">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center bg-warm-100">
                 <Search className="h-8 w-8 text-warm-400" />
               </div>
-              <h2 className="text-h3 font-heading text-navy-700 mb-2">No systems found</h2>
+              <h2 className="text-h3 font-heading text-navy-900 mb-2">No systems found</h2>
               <p className="text-warm-500 mb-6">
                 We couldn't find a system matching "{query}". Try a different term or clear your filters.
               </p>
@@ -174,19 +164,19 @@ export function SolutionsPage() {
                   >
                     <Link
                       to={`/systems/${p.slug}`}
-                      className="group block h-full rounded-xl border border-warm-200 bg-white overflow-hidden shadow-subtle hover:shadow-card transition-all duration-300"
+                      className="group block h-full bg-white border border-warm-200 hover:border-navy-300 transition-all duration-300 overflow-hidden"
                     >
                       <SmartImage
                         src={images.products[p.slug] ?? images.categoryDosing}
                         alt={p.name}
-                        className="transition-transform duration-500 group-hover:scale-[1.02]"
+                        className="transition-transform duration-700 group-hover:scale-[1.03]"
                       />
                       <div className="p-5">
                         <div className="flex items-center gap-2 mb-2">
                           <Icon className="h-4 w-4 text-teal-600" />
                           <span className="text-xs font-semibold text-warm-400">{p.categoryLabel}</span>
                         </div>
-                        <h3 className="text-h4 font-heading text-navy-700 mb-2">{p.name}</h3>
+                        <h3 className="text-h4 font-heading text-navy-900 mb-2">{p.name}</h3>
                         <p className="text-sm text-warm-500 leading-relaxed mb-3 line-clamp-2">{p.shortDescription}</p>
                         <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 group-hover:gap-2.5 transition-all">
                           View System <ArrowRight className="h-4 w-4" />

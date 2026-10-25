@@ -108,7 +108,7 @@ export function Header() {
                 <MapPin className="h-3.5 w-3.5 text-teal-400 shrink-0" />
                 <span>Bhiwandi, Maharashtra, India</span>
               </span>
-              <span className="h-3 w-px bg-navy-700" />
+              <span className="h-3 w-px bg-navy-700/50" />
               <span className="inline-flex items-center gap-1 text-teal-300 font-semibold">
                 <Factory className="h-3.5 w-3.5 text-teal-400" />
                 Automation Specialists Since 2006
@@ -131,7 +131,7 @@ export function Header() {
                 to="/"
                 className={cn(
                   'px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                  location.pathname === '/' ? 'text-teal-600' : 'text-navy-700 hover:text-teal-600 hover:bg-warm-50'
+                  location.pathname === '/' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                 )}
               >
                 Home
@@ -145,7 +145,7 @@ export function Header() {
                 <button
                   className={cn(
                     'flex items-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                    location.pathname.startsWith('/solutions') || megaMenuOpen ? 'text-teal-600 bg-warm-50' : 'text-navy-700 hover:text-teal-600 hover:bg-warm-50'
+                    location.pathname.startsWith('/solutions') || megaMenuOpen ? 'text-teal-600 bg-warm-50' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                   )}
                   aria-expanded={megaMenuOpen}
                   aria-haspopup="true"
@@ -160,7 +160,7 @@ export function Header() {
                 to="/about"
                 className={cn(
                   'px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                  location.pathname === '/about' ? 'text-teal-600' : 'text-navy-700 hover:text-teal-600 hover:bg-warm-50'
+                  location.pathname === '/about' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                 )}
               >
                 About
@@ -170,7 +170,7 @@ export function Header() {
                 to="/contact"
                 className={cn(
                   'px-4 py-2 text-sm font-semibold rounded-lg transition-colors',
-                  location.pathname === '/contact' ? 'text-teal-600' : 'text-navy-700 hover:text-teal-600 hover:bg-warm-50'
+                  location.pathname === '/contact' ? 'text-teal-600' : 'text-navy-900 hover:text-teal-600 hover:bg-warm-50'
                 )}
               >
                 Contact
@@ -236,7 +236,7 @@ export function Header() {
               <div className="relative hidden sm:block">
                 <button
                   onClick={() => setSearchOpen(!searchOpen)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg text-navy-700 hover:bg-warm-100 transition-colors"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg text-navy-600 hover:bg-warm-100 transition-colors"
                   aria-label="Search systems"
                   aria-expanded={searchOpen}
                 >
@@ -290,7 +290,7 @@ export function Header() {
               <Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
                 <SheetTrigger asChild>
                   <button
-                    className="flex h-10 w-10 items-center justify-center rounded-lg text-navy-700 hover:bg-warm-100 transition-colors lg:hidden"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg text-navy-600 hover:bg-warm-100 transition-colors lg:hidden"
                     aria-label="Open menu"
                   >
                     <Menu className="h-5 w-5" />
@@ -301,7 +301,7 @@ export function Header() {
                     <Logo />
                   </div>
                   <nav className="flex-1 overflow-y-auto px-3 py-4" aria-label="Mobile navigation">
-                    <Link to="/" className="block px-3 py-2.5 text-sm font-semibold text-navy-700 rounded-lg hover:bg-warm-50">
+                    <Link to="/" className="block px-3 py-2.5 text-sm font-semibold text-navy-600 rounded-lg hover:bg-warm-50">
                       Home
                     </Link>
 
@@ -313,7 +313,7 @@ export function Header() {
                         <div key={cat} className="py-1">
                           <button
                             onClick={() => setExpandedCategory(isExpanded ? null : cat)}
-                            className="flex w-full items-center justify-between px-3 py-2.5 text-sm font-semibold text-navy-700 rounded-lg hover:bg-warm-50"
+                            className="flex w-full items-center justify-between px-3 py-2.5 text-sm font-semibold text-navy-600 rounded-lg hover:bg-warm-50"
                             aria-expanded={isExpanded}
                           >
                             {categoryLabels[cat]}
@@ -347,13 +347,13 @@ export function Header() {
                       );
                     })}
 
-                    <Link to="/solutions" className="block px-3 py-2.5 text-sm font-semibold text-navy-700 rounded-lg hover:bg-warm-50">
+                    <Link to="/solutions" className="block px-3 py-2.5 text-sm font-semibold text-navy-600 rounded-lg hover:bg-warm-50">
                       All Solutions
                     </Link>
-                    <Link to="/about" className="block px-3 py-2.5 text-sm font-semibold text-navy-700 rounded-lg hover:bg-warm-50">
+                    <Link to="/about" className="block px-3 py-2.5 text-sm font-semibold text-navy-600 rounded-lg hover:bg-warm-50">
                       About
                     </Link>
-                    <Link to="/contact" className="block px-3 py-2.5 text-sm font-semibold text-navy-700 rounded-lg hover:bg-warm-50">
+                    <Link to="/contact" className="block px-3 py-2.5 text-sm font-semibold text-navy-600 rounded-lg hover:bg-warm-50">
                       Contact
                     </Link>
 

@@ -4,24 +4,24 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-500 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         primary:
           'bg-teal-500 text-white hover:bg-teal-600 active:bg-teal-700 shadow-subtle hover:shadow-card',
         secondary:
-          'bg-navy-700 text-white hover:bg-navy-800 active:bg-navy-900 shadow-subtle',
+          'bg-navy-900 text-white hover:bg-navy-800 active:bg-navy-700 shadow-subtle',
         outline:
-          'border border-navy-200 bg-white text-navy-700 hover:border-navy-300 hover:bg-warm-50 active:bg-warm-100',
+          'border border-navy-200 bg-white text-navy-900 hover:border-navy-300 hover:bg-warm-50 active:bg-warm-100',
         ghost:
-          'text-navy-700 hover:bg-warm-100 active:bg-warm-200',
+          'text-navy-900 hover:bg-warm-100 active:bg-warm-200',
         accent:
           'bg-accent-500 text-white hover:bg-accent-600 active:bg-accent-700 shadow-subtle',
         'outline-light':
           'border border-white/30 bg-transparent text-white hover:bg-white/10 active:bg-white/20',
         'solid-light':
-          'bg-white text-navy-700 hover:bg-warm-100 active:bg-warm-200 shadow-subtle',
+          'bg-white text-navy-900 hover:bg-warm-100 active:bg-warm-200 shadow-subtle',
       },
       size: {
         sm: 'h-9 px-4 text-sm',
