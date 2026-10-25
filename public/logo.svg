@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 58" width="320" height="58">
+  <defs>
+    <!-- Clip strictly to the oval emblem shape -->
+    <clipPath id="emblem-oval">
+      <ellipse cx="36" cy="29" rx="31" ry="24" />
+    </clipPath>
+  </defs>
+
+  <!-- Left Emblem: Indian Tricolor Oval -->
+  <g clip-path="url(#emblem-oval)">
+    <!-- Top Saffron/Orange Dome -->
+    <rect x="0" y="0" width="75" height="19" fill="#E7792A" />
+    
+    <!-- Center White Band -->
+    <rect x="0" y="19" width="75" height="19" fill="#FFFFFF" />
+    
+    <!-- Divider Lines -->
+    <line x1="0" y1="19" x2="75" y2="19" stroke="#E7792A" stroke-width="0.6" opacity="0.8" />
+    <line x1="0" y1="38" x2="75" y2="38" stroke="#049747" stroke-width="1.4" />
+    
+    <!-- Bottom Green Dome -->
+    <rect x="0" y="38" width="75" height="22" fill="#049747" />
+    
+    <!-- NEW LOGIC Brand Text in White Band -->
+    <text 
+      x="36" 
+      y="31.5" 
+      text-anchor="middle" 
+      font-family="'Times New Roman', Times, 'Georgia', serif" 
+      font-weight="bold" 
+      font-size="9.2px" 
+      fill="#0A66B7" 
+      letter-spacing="0.7px"
+    >NEW LOGIC</text>
+  </g>
+
+  <!-- Subtle Emblem Edge Definition for Light/Dark Contexts -->
+  <ellipse cx="36" cy="29" rx="31" ry="24" fill="none" stroke="#049747" stroke-width="0.4" opacity="0.2" />
+
+  <!-- Company Name: New Logic Automation -->
+  <text 
+    x="76" 
+    y="27" 
+    font-family="'Times New Roman', Times, 'Georgia', serif" 
+    font-weight="bold" 
+    font-size="23px" 
+    fill="#006DB6" 
+    letter-spacing="-0.2px"
+  >New Logic Automation</text>
+
+  <!-- Tagline: Pioneer in Industrial Automation -->
+  <text 
+    x="77" 
+    y="44.5" 
+    font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" 
+    font-weight="bold" 
+    font-size="12.2px" 
+    fill="#0082C8" 
+    letter-spacing="0.4px"
+  >Pioneer in Industrial Automation</text>
+</svg>

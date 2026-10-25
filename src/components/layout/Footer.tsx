@@ -19,7 +19,7 @@ export function Footer() {
                 src="/logo.png"
                 alt="New Logic Automation"
                 className="h-11 w-auto object-contain"
-                width="190"
+                width="242"
                 height="44"
               />
             </div>
