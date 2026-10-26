@@ -5,33 +5,45 @@ import { cn } from '@/lib/utils';
 
 export function TemplateSwitcher() {
   const { templateId, availableTemplates, switchTemplate } = useTemplate();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+
+  const activeTemplate = availableTemplates.find(t => t.id === templateId);
 
   return (
     <aside 
       className="fixed bottom-4 right-4 z-[999] max-w-sm font-sans"
       aria-label="Client Template Review Selector"
     >
-      <div className="rounded-xl border border-warm-200 bg-white/95 p-3 shadow-2xl backdrop-blur-md transition-all sm:p-3.5">
+      <div className="rounded-xl border border-warm-300/80 bg-white/95 p-2.5 sm:p-3 shadow-2xl backdrop-blur-md transition-all">
         {/* Header Bar */}
-        <div className="flex items-center justify-between gap-3 border-b border-warm-100 pb-2">
+        <div 
+          className={cn(
+            "flex items-center justify-between gap-3 cursor-pointer select-none",
+            !collapsed && "border-b border-warm-100 pb-2"
+          )}
+          onClick={() => setCollapsed(!collapsed)}
+        >
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-md bg-teal-50 text-teal-600">
               <Layers className="h-3.5 w-3.5" />
             </span>
             <div>
               <p className="text-xs font-bold text-navy-900 flex items-center gap-1.5">
-                Client Review Mode
+                Review Mode
                 <span className="rounded-full bg-teal-100 px-1.5 py-0.2 text-[10px] font-semibold text-teal-800">
                   T{templateId}
                 </span>
+                {collapsed && activeTemplate && (
+                  <span className="text-[11px] font-normal text-warm-500 hidden sm:inline">
+                    • {activeTemplate.name}
+                  </span>
+                )}
               </p>
             </div>
           </div>
 
           <button
             type="button"
-            onClick={() => setCollapsed(!collapsed)}
             className="rounded p-1 text-warm-400 hover:bg-warm-100 hover:text-navy-900 transition-colors"
             aria-label={collapsed ? 'Expand template selector' : 'Collapse template selector'}
             title={collapsed ? 'Expand' : 'Collapse'}
@@ -40,18 +52,7 @@ export function TemplateSwitcher() {
           </button>
         </div>
 
-        {/* Collapsed summary pill */}
-        {collapsed ? (
-          <div className="pt-2 text-center">
-            <button
-              type="button"
-              onClick={() => setCollapsed(false)}
-              className="text-[11px] font-semibold text-teal-600 hover:underline"
-            >
-              Switch Design Template ({templateId}/4)
-            </button>
-          </div>
-        ) : (
+        {!collapsed && (
           /* Template Option Buttons */
           <div className="pt-2.5">
             <p className="text-[11px] text-warm-500 mb-2">

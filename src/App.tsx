@@ -10,8 +10,12 @@ import { ContactPage } from '@/pages/ContactPage';
 import { PrivacyPage } from '@/pages/PrivacyPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
-// Import Multi-Template Home Pages
+// Import Multi-Template Pages
 import { HomePage2 } from '@/templates/template2/HomePage2';
+import { AboutPage2 } from '@/templates/template2/AboutPage2';
+import { SolutionsPage2 } from '@/templates/template2/SolutionsPage2';
+import { SystemPage2 } from '@/templates/template2/SystemPage2';
+import { ContactPage2 } from '@/templates/template2/ContactPage2';
 import { HomePage3 } from '@/templates/template3/HomePage3';
 import { HomePage4 } from '@/templates/template4/HomePage4';
 
@@ -68,10 +72,10 @@ function App() {
         {/* Template 2: Modern Engineering & Modular Industrial Flow */}
         <Route path="/2" element={<TemplateLayout templateId="2" />}>
           <Route index element={<HomePage2 />} />
-          <Route path="solutions" element={<SolutionsPage />} />
-          <Route path="systems/:slug" element={<SystemPage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="contact" element={<ContactPage />} />
+          <Route path="solutions" element={<SolutionsPage2 />} />
+          <Route path="systems/:slug" element={<SystemPage2 />} />
+          <Route path="about" element={<AboutPage2 />} />
+          <Route path="contact" element={<ContactPage2 />} />
           <Route path="privacy" element={<PrivacyPage />} />
         </Route>
 
