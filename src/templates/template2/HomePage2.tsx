@@ -1,202 +1,503 @@
-import { useState, useMemo } from 'react';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TemplateLink as Link } from '@/context/TemplateContext';
 import { 
   ArrowRight, 
-  Factory, 
+  ArrowUpRight,
   ShieldCheck, 
-  Sparkles, 
-  ChevronRight, 
-  Activity, 
-  Cpu, 
-  CheckCircle2, 
-  Scale, 
-  Clock, 
-  PhoneCall, 
-  Phone,
-  Mail,
-  MapPin,
-  MessageSquare,
-  Wind
+  Pause,
+  Play,
+  Check,
+  Building2,
+  Layers,
+  Sparkles,
+  Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { products } from '@/data/products';
-import { images, getProductImage } from '@/lib/images';
-import { InteractivePlantFlow } from './components/InteractivePlantFlow';
-import { ClientLogoGridSection } from '@/components/common/ClientLogoGridSection';
+import { SEO } from '@/components/SEO';
+
+/**
+ * 4 Featured Showcase Machinery Cutouts from Rhythm Revamp
+ */
+interface ShowcaseMachine {
+  id: number;
+  number: string;
+  name: string;
+  slug: string;
+  description: string;
+  cutout: string;
+}
+
+const showcaseMachines: ShowcaseMachine[] = [
+  {
+    id: 0,
+    number: '01',
+    name: 'Sugar Syrup Preparation',
+    slug: 'invert-syrup-preparation',
+    description: 'Accurate, hygienic charging with automated syrup preparation.',
+    cutout: '/rhythm-photos/sugar-syrup-cutout.png',
+  },
+  {
+    id: 1,
+    number: '02',
+    name: 'Cream Preparation',
+    slug: 'cream-preparation',
+    description: 'Prepare consistent cream for your production requirements.',
+    cutout: '/rhythm-photos/cream-cutout.png',
+  },
+  {
+    id: 2,
+    number: '03',
+    name: 'Chemical Handling System',
+    slug: 'chemical-handling',
+    description: 'Controlled preparation and dispensing into your process.',
+    cutout: '/rhythm-photos/chemical-cutout.png',
+  },
+  {
+    id: 3,
+    number: '04',
+    name: 'Flour Handling System',
+    slug: 'flour-maida-handling',
+    description: 'Reduce spillage and manual handling through your production line.',
+    cutout: '/rhythm-photos/flour-cutout.png',
+  },
+];
+
+/**
+ * Hero Panorama Slider Slides
+ */
+interface PanoramaSlide {
+  id: number;
+  title: string;
+  subtitle: string;
+  image: string;
+  slug: string;
+}
+
+const panoramaSlides: PanoramaSlide[] = [
+  {
+    id: 0,
+    title: 'Liquid Handling System',
+    subtitle: 'Accurate dosing. Consistent production.',
+    image: '/rhythm-photos/liquid.jpg',
+    slug: 'multiple-liquid-dosing',
+  },
+  {
+    id: 1,
+    title: 'Flour Handling System',
+    subtitle: 'Flour spillage and losses minimum. Dust free environment.',
+    image: '/rhythm-photos/flour.jpg',
+    slug: 'flour-maida-handling',
+  },
+  {
+    id: 2,
+    title: 'Creamer (Cream Preparation)',
+    subtitle: 'Very high quality consistent cream can be produced.',
+    image: '/rhythm-photos/creamer.jpg',
+    slug: 'cream-preparation',
+  },
+];
+
+/**
+ * 6 Core Products for Solutions Grid
+ */
+interface RhythmProduct {
+  id: string;
+  num: string;
+  category: 'dosing' | 'preparation';
+  categoryLabel: string;
+  name: string;
+  slug: string;
+  summary: string;
+  photo: string;
+}
+
+const rhythmProducts: RhythmProduct[] = [
+  {
+    id: 'liquid',
+    num: '01',
+    category: 'dosing',
+    categoryLabel: 'Auto dosing',
+    name: 'Liquid Handling System',
+    slug: 'multiple-liquid-dosing',
+    summary: 'Accurate dosing. Consistent quality. Better hygiene.',
+    photo: '/rhythm-photos/liquid.jpg',
+  },
+  {
+    id: 'syrup',
+    num: '02',
+    category: 'preparation',
+    categoryLabel: 'Preparation',
+    name: 'Sugar Syrup Preparation',
+    slug: 'invert-syrup-preparation',
+    summary: 'Accurate charging. Heated and jacketed preparation.',
+    photo: '/rhythm-photos/syrup.jpg',
+  },
+  {
+    id: 'flour',
+    num: '03',
+    category: 'dosing',
+    categoryLabel: 'Auto dosing',
+    name: 'Flour Handling System',
+    slug: 'flour-maida-handling',
+    summary: 'Minimum spillage. Cleaner transfers. Easy maintenance.',
+    photo: '/rhythm-photos/flour.jpg',
+  },
+  {
+    id: 'creamer',
+    num: '04',
+    category: 'preparation',
+    categoryLabel: 'Preparation',
+    name: 'Creamer (Cream Preparation)',
+    slug: 'cream-preparation',
+    summary: 'Consistent texture. Uniform aeration. Reliable mixing.',
+    photo: '/rhythm-photos/creamer.jpg',
+  },
+  {
+    id: 'screen',
+    num: '05',
+    category: 'preparation',
+    categoryLabel: 'Preparation',
+    name: 'Sepro Gyroscreen',
+    slug: 'sepro-gyroscreen',
+    summary: 'Efficient screening for wet slurries and dry ingredients.',
+    photo: '/rhythm-photos/screen.png',
+  },
+  {
+    id: 'chemical',
+    num: '06',
+    category: 'dosing',
+    categoryLabel: 'Auto dosing',
+    name: 'Chemical Handling System',
+    slug: 'chemical-handling',
+    summary: 'Accurate measurement and controlled addition to process.',
+    photo: '/rhythm-photos/chemical.jpg',
+  },
+];
+
+/**
+ * Client Logos from Rhythm assets
+ */
+const domesticClients = [
+  { name: 'Britannia Industries Ltd.', logo: '/rhythm-photos/client-domestic-01.png' },
+  { name: 'ITC Ltd.', logo: '/rhythm-photos/client-domestic-02.png' },
+  { name: 'Haldiram Foods International Pvt. Ltd.', logo: '/rhythm-photos/client-domestic-03.png' },
+  { name: 'Unibic Foods India Pvt. Ltd.', logo: '/rhythm-photos/client-domestic-04.png' },
+  { name: 'Patanjali Ayurved Ltd.', logo: '/rhythm-photos/client-domestic-05.jpg' },
+  { name: 'Anmol Industries Ltd.', logo: '/rhythm-photos/client-domestic-06.png' },
+  { name: 'Raja Udyog Pvt. Ltd.', logo: '/rhythm-photos/client-domestic-07.png' },
+  { name: 'Bonn Nutrients Pvt. Ltd.', logo: '/rhythm-photos/client-domestic-08.jpg' },
+  { name: 'Dukes Products (India) Ltd.', logo: '/rhythm-photos/client-domestic-09.jpg' },
+  { name: 'Bhagwati Foods Pvt. Ltd.', logo: '/rhythm-photos/client-domestic-10.jpg' },
+  { name: 'Mrs. Bector Food Specialities Ltd.', logo: '/rhythm-photos/client-domestic-11.png' },
+];
+
+const internationalClients = [
+  { name: 'Britannia Nepal Ltd.', logo: '/rhythm-photos/client-international-01.png' },
+  { name: 'Pran Foods Ltd.', logo: '/rhythm-photos/client-international-02.jpg' },
+  { name: 'Kwality Noodles Industries (P) Ltd.', logo: '/rhythm-photos/client-international-03.png' },
+  { name: 'Asian Biscuit & Confectionery Pvt. Ltd.', logo: '/rhythm-photos/client-international-04.png' },
+  { name: 'Khajurico Nepal Pvt. Ltd.', logo: '/rhythm-photos/client-international-05.jpg' },
+  { name: 'Ifad Multi Products Ltd.', logo: '/rhythm-photos/client-international-06.png' },
+  { name: 'Lae Biscuit Co. Ltd.', logo: '/rhythm-photos/client-international-07.png' },
+  { name: 'Reedisha Foods Ltd.', logo: '/rhythm-photos/client-international-08.jpg' },
+];
 
 export function HomePage2() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  // Active machinery showcase in hero
+  const [activeMachineIdx, setActiveMachineIdx] = useState(0);
+  const activeMachine = showcaseMachines[activeMachineIdx];
 
-  // Top Reading Progress Line with Spring Physics
-  const { scrollYProgress } = useScroll();
-  const scrollProgress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 25,
-    restDelta: 0.001,
+  // Panorama Carousel state
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isSliderPlaying, setIsSliderPlaying] = useState(true);
+
+  // Solutions category filter
+  const [filterCategory, setFilterCategory] = useState<'all' | 'dosing' | 'preparation'>('all');
+
+  // Client marquee pause state
+  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
+
+  // Quick enquiry form state
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    requirement: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  // Panorama slider auto-advance every 5.5s
+  useEffect(() => {
+    if (!isSliderPlaying) return;
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % panoramaSlides.length);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [isSliderPlaying]);
+
+  const filteredProducts = rhythmProducts.filter((p) => {
+    if (filterCategory === 'all') return true;
+    return p.category === filterCategory;
   });
 
-  const featuredModules = useMemo(() => {
-    if (selectedCategory === 'all') {
-      return products.slice(0, 6);
+  const handleEnquirySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const mailtoSubject = encodeURIComponent(`Requirement Enquiry from ${formData.name}`);
+    const mailtoBody = encodeURIComponent(
+      `Name: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nRequirement:\n${formData.requirement}\n\nSent via Rhythm Template 2`
+    );
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(
+        `Name: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nRequirement: ${formData.requirement}`
+      );
     }
-    return products.filter((p) => p.category === selectedCategory).slice(0, 6);
-  }, [selectedCategory]);
+    setSubmitted(true);
+    window.location.href = `mailto:logicequip@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+  };
 
   return (
-    <div className="bg-warm-50 text-navy-900 font-sans">
-      {/* Top Reading Progress Indicator */}
-      <motion.div 
-        style={{ scaleX: scrollProgress, transformOrigin: 'left' }}
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-teal-600 to-teal-400 z-50 pointer-events-none"
+    <div className="bg-[#f4f6f3] text-[#172b33] font-sans antialiased selection:bg-[#007f91] selection:text-white">
+      <SEO
+        title="New Logic Automation — Precision in handling. Consistency in every process."
+        description="We are innovative and embrace new engineering challenges - delivering hygienic, dust-free, PLC-controlled raw material handling and ingredient preparation systems."
+        path="/2"
       />
 
-      {/* Template 2 Concept Header Banner */}
-      <div className="bg-navy-900 text-white py-2 px-4 text-center text-xs font-medium border-b border-navy-800/80">
-        <span className="inline-flex items-center gap-1.5 text-teal-400 font-bold">
-          <Sparkles className="h-3.5 w-3.5" /> Template 2:
-        </span>{' '}
-        <span className="text-warm-300">Modern Engineering &amp; Interactive Plant Flow Architecture</span>
-      </div>
-
-      {/* Hero Section: Executive Engineering Credibility */}
-      <section className="relative overflow-hidden bg-white border-b border-warm-200 py-14 lg:py-20">
-        {/* Architectural Datum Grid (Subtle ASML-Inspired Coordinate Accents) */}
-        <div 
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(#0A1930_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.04]" 
-          aria-hidden="true" 
-        />
-        <div 
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white via-transparent to-warm-50/60" 
-          aria-hidden="true" 
-        />
+      {/* =========================================================================
+          HERO SECTION (Rhythm Split Engineering Layout)
+          ========================================================================= */}
+      <section className="relative pt-12 pb-16 lg:pt-16 lg:pb-24 overflow-hidden border-b border-[#dce3e3] bg-[#f4f6f3]">
+        {/* Subtle engineering background glows & grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-40">
+          <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-[#d8eaf5]/60 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 right-1/4 w-[30rem] h-[30rem] bg-[#007f91]/5 rounded-full blur-3xl" />
+        </div>
 
         <div className="container-page relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Content Column */}
-            <div className="lg:col-span-7 space-y-5 sm:space-y-6">
-              {/* Refined Engineering Heritage Tag */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-warm-200 bg-warm-50/90 px-3 sm:px-3.5 py-1 text-[11px] sm:text-xs font-semibold text-navy-800 shadow-subtle backdrop-blur-sm max-w-full">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                <span className="truncate">Sanitary SS304/316 OEM • Bhiwandi Works Since 2006</span>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+            
+            {/* Left Copy Column */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[1.8px] text-[#172b33]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#007f91]" />
+                <span>NEW LOGIC AUTOMATION</span>
               </div>
 
-              <h1 className="text-[1.45rem] leading-[1.2] sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-navy-900">
-                Engineered for Uptime, <br />
-                <span className="text-teal-500 font-black">Precision &amp; Zero Material Loss</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-[-1.8px] leading-[1.04] text-[#172b33]">
+                Precision in handling.
+                <br />
+                Consistency in
+                <br />
+                <em className="not-italic text-[#007f91]">every process.</em>
               </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-warm-600 leading-relaxed max-w-2xl">
-                Turnkey pneumatic conveying pipelines, automated ingredient dosing skids, and continuous food processing systems engineered for 24/7 reliability in India's premier bakeries, snack plants, and confectionery factories.
+              <p className="text-base sm:text-lg text-[#66747a] leading-relaxed max-w-lg">
+                We are innovative and embrace new engineering challenges &mdash; delivering hygienic, dust-free, PLC-controlled raw material handling and ingredient preparation systems for leading food, bakery, and biscuit plants around the world.
               </p>
 
-              {/* High-Contrast Interactive CTA Row */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-1">
-                <Button asChild size="lg" variant="primary" className="font-bold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
-                  <Link to="/contact">
-                    Request Plant Layout (GA) Drawing <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-5 pt-2">
+                <Button asChild size="lg" className="bg-[#007f91] hover:bg-[#006675] text-white font-medium text-xs px-6 py-3.5 rounded-none shadow-sm hover:-translate-y-0.5 transition-all">
+                  <a href="#solutions">
+                    Explore our systems
+                    <ArrowRight className="h-4 w-4 ml-3" />
+                  </a>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-navy-200 text-navy-900 hover:bg-warm-100 font-semibold w-full sm:w-auto">
-                  <Link to="/solutions">Explore Systems Portfolio</Link>
-                </Button>
-              </div>
-
-              {/* Elevated Performance Metric Strip */}
-              <div className="pt-2 sm:pt-4">
-                <div className="grid grid-cols-3 divide-x divide-warm-200 rounded-xl border border-warm-200/80 bg-warm-50/80 p-3 sm:p-4 shadow-subtle">
-                  <div className="px-1.5 sm:px-4 text-center sm:text-left">
-                    <p className="text-xl sm:text-3xl font-extrabold text-navy-900 tracking-tight">500+</p>
-                    <p className="text-[10px] sm:text-xs text-warm-600 font-medium mt-0.5 leading-tight">Turnkey Installations</p>
-                  </div>
-                  <div className="px-1.5 sm:px-4 text-center sm:text-left">
-                    <p className="text-xl sm:text-3xl font-extrabold text-teal-500 tracking-tight">±0.2%</p>
-                    <p className="text-[10px] sm:text-xs text-warm-600 font-medium mt-0.5 leading-tight">Batch Recipe Lock</p>
-                  </div>
-                  <div className="px-1.5 sm:px-4 text-center sm:text-left">
-                    <p className="text-xl sm:text-3xl font-extrabold text-navy-900 tracking-tight">18+ Yrs</p>
-                    <p className="text-[10px] sm:text-xs text-warm-600 font-medium mt-0.5 leading-tight">OEM Engineering</p>
-                  </div>
-                </div>
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-[#172b33] hover:text-[#007f91] transition-colors"
+                >
+                  Discuss your requirement
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </a>
               </div>
             </div>
 
-            {/* Right Hero Visual: Executive CAD Schematic Console */}
-            <div className="lg:col-span-5">
-              <div className="relative rounded-2xl border border-navy-700/80 bg-gradient-to-br from-navy-900 via-navy-800 to-navy-950 p-5 sm:p-6 text-white shadow-elevated">
-                {/* Console Top Header */}
-                <div className="flex items-center justify-between border-b border-navy-700/70 pb-3.5 mb-4">
-                  <div className="flex items-center gap-2">
-                    <Cpu className="h-4 w-4 text-teal-400" />
-                    <span className="text-xs font-mono font-bold tracking-wider text-warm-200 uppercase">
-                      Pneumatic Process Circuit
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5 rounded-full bg-emerald-950/80 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-300 border border-emerald-500/40">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Closed Loop Active</span>
-                  </div>
-                </div>
+            {/* Right Column: Interactive Machinery Showcase */}
+            <div className="lg:col-span-6">
+              <div className="relative p-6 sm:p-8 rounded-2xl border border-[#dce3e3] bg-white shadow-xl shadow-[#172b33]/5 text-center">
+                
+                {/* Decorative orbit behind machinery */}
+                <div 
+                  className="pointer-events-none absolute top-12 left-[10%] right-[10%] h-[280px] rounded-[50%] border border-[#006b9d]/15 bg-radial from-[#d8eaf5]/50 to-transparent -rotate-12 -z-0"
+                  aria-hidden="true" 
+                />
 
-                {/* Industrial Schematic Machinery Viewport */}
-                <div className="relative h-44 rounded-xl overflow-hidden border border-navy-700/80 bg-navy-950 mb-4 group">
-                  <img 
-                    src={images.products['flour-maida-handling'] || images.hero}
-                    alt="Sanitary pneumatic food automation skid"
-                    className="h-full w-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/30 to-transparent" />
+                {/* Machine View Stage */}
+                <div className="relative h-[340px] sm:h-[380px] flex flex-col justify-between items-center z-10">
                   
-                  {/* Schematic HUD Overlays */}
-                  <div className="absolute top-2.5 left-2.5 flex items-center gap-2">
-                    <span className="rounded bg-navy-900/90 px-2 py-0.5 font-mono text-[10px] text-teal-300 border border-teal-500/30">
-                      SYS-ID: NLA-FLOUR-500
+                  {/* Top Figcaption */}
+                  <div className="self-start flex items-center gap-4 text-left">
+                    <span className="font-mono text-3xl font-light text-[#007f91] border-r border-[#dce3e3] pr-4">
+                      {activeMachine.number}
                     </span>
+                    <div>
+                      <span className="block text-[9px] font-bold uppercase tracking-[1.4px] text-[#66747a]">
+                        SYSTEM SPOTLIGHT
+                      </span>
+                      <strong className="block text-lg font-semibold text-[#172b33]">
+                        {activeMachine.name}
+                      </strong>
+                    </div>
                   </div>
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs">
-                    <span className="text-warm-200 font-mono text-[10px] bg-navy-900/80 px-2 py-0.5 rounded border border-navy-700">
-                      Conveying Velocity: 22 m/s
-                    </span>
-                    <span className="text-emerald-300 font-semibold text-[11px] flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3" /> Zero Dust Emission
-                    </span>
+
+                  {/* Cutout Image with Smooth Fade */}
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeMachine.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                      className="relative my-auto flex items-center justify-center h-[240px] w-full"
+                    >
+                      <img
+                        src={activeMachine.cutout}
+                        alt={activeMachine.name}
+                        className="max-h-[230px] w-auto object-contain drop-shadow-[0_16px_14px_rgba(23,62,80,0.18)]"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* Interactive Details & CTA */}
+                  <div className="w-full pt-3 border-t border-[#dce3e3] flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                    <p className="text-xs text-[#66747a] line-clamp-1 max-w-xs">
+                      {activeMachine.description}
+                    </p>
+                    <Button asChild size="sm" className="bg-[#007f91] hover:bg-[#006675] text-white text-xs font-semibold rounded-none shrink-0">
+                      <Link to={`/contact?system=${activeMachine.slug}`}>
+                        Send Enquiry <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
+                      </Link>
+                    </Button>
                   </div>
+
                 </div>
 
-                {/* 4 Process Sequence Steps */}
-                <div className="space-y-2.5">
-                  {[
-                    { step: '01', title: 'Raw Intake & Screening', desc: 'Flour silos, bag dump stations & vibrating gyroscreen sifting' },
-                    { step: '02', title: 'Pneumatic Conveying', desc: 'Dense/lean phase pressure transport with zero airborne dust' },
-                    { step: '03', title: 'Micro & Liquid Dosing', desc: 'Load-cell loss-in-weight batching with recipe PLC controller' },
-                    { step: '04', title: 'Cream & Slurry Prep', desc: 'Jacketed temperature-controlled homogenizers & emulsifiers' },
-                  ].map((s) => (
-                    <div 
-                      key={s.step} 
-                      className="flex items-center gap-3 rounded-lg bg-navy-800/60 p-2.5 border border-navy-700/60 hover:border-teal-500/40 hover:bg-navy-800/90 transition-all"
+                {/* 4 Machine Selectors Thumbnail Buttons */}
+                <div className="flex items-center justify-center gap-3 pt-6 mt-4 border-t border-[#dce3e3]">
+                  {showcaseMachines.map((m, idx) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setActiveMachineIdx(idx)}
+                      className={`relative flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
+                        activeMachineIdx === idx
+                          ? 'border-[#007f91] bg-[#007f91]/10 text-[#007f91] shadow-sm'
+                          : 'border-[#dce3e3] bg-white text-[#66747a] hover:border-[#007f91]/50 hover:bg-[#f4f6f3]'
+                      }`}
                     >
-                      <span className="font-mono text-xs font-bold text-teal-400 bg-navy-950/80 px-2 py-1 rounded border border-teal-500/30">
-                        {s.step}
-                      </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-xs font-bold text-white truncate">{s.title}</h4>
-                          <span className="text-[10px] font-mono text-warm-400">Zone {s.step}</span>
-                        </div>
-                        <p className="text-[11px] text-warm-300 truncate mt-0.5">{s.desc}</p>
-                      </div>
-                    </div>
+                      <img src={m.cutout} alt="" className="h-6 w-6 object-contain" />
+                      <span>{m.number}</span>
+                    </button>
                   ))}
                 </div>
+                <p className="text-[10px] text-[#66747a] mt-2 font-mono">
+                  Select a system to explore
+                </p>
 
-                {/* Console Footer Certifications */}
-                <div className="mt-4 pt-3.5 border-t border-navy-700/70 flex items-center justify-between text-xs text-warm-300">
-                  <span className="flex items-center gap-1.5 text-warm-200">
-                    <ShieldCheck className="h-4 w-4 text-teal-400" /> Sanitary 304/316 SS
-                  </span>
-                  <span className="flex items-center gap-1.5 text-teal-300 font-mono text-[11px]">
-                    <Activity className="h-3.5 w-3.5" /> SCADA Integrated
-                  </span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* 4 Engineering Statistics Bar (Rhythm Stats) */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-14 lg:pt-18 border-t border-[#dce3e3] mt-14">
+            <div className="flex items-center gap-3.5 p-3 rounded-xl bg-white/70 border border-[#dce3e3]">
+              <Building2 className="h-6 w-6 text-[#007f91] shrink-0" />
+              <div>
+                <strong className="block text-xl font-extrabold text-[#172b33]">2006</strong>
+                <span className="text-xs text-[#66747a]">Established In India</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3.5 p-3 rounded-xl bg-white/70 border border-[#dce3e3]">
+              <Layers className="h-6 w-6 text-[#007f91] shrink-0" />
+              <div>
+                <strong className="block text-xl font-extrabold text-[#172b33]">23+</strong>
+                <span className="text-xs text-[#66747a]">Specialized Systems</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3.5 p-3 rounded-xl bg-white/70 border border-[#dce3e3]">
+              <ShieldCheck className="h-6 w-6 text-[#007f91] shrink-0" />
+              <div>
+                <strong className="block text-xl font-extrabold text-[#172b33]">100%</strong>
+                <span className="text-xs text-[#66747a]">Hygienic &amp; Dust-Free</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3.5 p-3 rounded-xl bg-white/70 border border-[#dce3e3]">
+              <Sparkles className="h-6 w-6 text-[#007f91] shrink-0" />
+              <div>
+                <strong className="block text-xl font-extrabold text-[#172b33]">Tier-1</strong>
+                <span className="text-xs text-[#66747a]">Global FMCG Clients</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          HERO PANORAMA CAROUSEL (Rhythm Panorama Slider)
+          ========================================================================= */}
+      <section className="relative bg-[#172b33] text-white overflow-hidden border-b border-[#172b33]">
+        <div className="relative h-[380px] sm:h-[440px] lg:h-[480px] w-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSlide}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7 }}
+              className="absolute inset-0"
+            >
+              <img
+                src={panoramaSlides[activeSlide].image}
+                alt={panoramaSlides[activeSlide].title}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#172b33] via-[#172b33]/40 to-transparent" />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Caption Overlay */}
+          <div className="absolute inset-0 flex items-end pb-12 z-10 pointer-events-none">
+            <div className="container-page w-full flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 pointer-events-auto">
+              <div className="space-y-1 text-white">
+                <span className="text-[10px] font-bold uppercase tracking-[1.8px] text-[#007f91] bg-white/10 px-2 py-0.5 rounded">
+                  ENGINEERED FOR YOUR PROCESS
+                </span>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
+                  {panoramaSlides[activeSlide].title}
+                </h2>
+                <p className="text-xs sm:text-sm text-warm-300">
+                  {panoramaSlides[activeSlide].subtitle}
+                </p>
+              </div>
+
+              {/* Slider Controls */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsSliderPlaying(!isSliderPlaying)}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm transition-all"
+                  aria-label={isSliderPlaying ? 'Pause panorama slider' : 'Play panorama slider'}
+                >
+                  {isSliderPlaying ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                </button>
+                <div className="flex items-center gap-1.5">
+                  {panoramaSlides.map((s, idx) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => setActiveSlide(idx)}
+                      className={`h-1.5 rounded-full transition-all ${
+                        activeSlide === idx ? 'w-6 bg-[#007f91]' : 'w-1.5 bg-white/40'
+                      }`}
+                      aria-label={`Slide ${idx + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -204,405 +505,424 @@ export function HomePage2() {
         </div>
       </section>
 
-      {/* NEW INTERACTIVE PROCESS FLOW: Replaces vertical scroll pipeline */}
-      <InteractivePlantFlow />
-
-      {/* Commercial ROI & Plant Manager Pillars */}
-      <section className="py-16 lg:py-24 bg-white border-b border-warm-200">
+      {/* =========================================================================
+          01 / OUR SOLUTIONS SECTION (Rhythm Solutions Grid)
+          ========================================================================= */}
+      <section className="py-20 lg:py-28 bg-[#f4f6f3] border-b border-[#dce3e3]" id="solutions">
         <div className="container-page">
-          <div className="max-w-3xl mx-auto text-center mb-14">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-600">The New Logic Advantage</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-navy-900 mt-1.5">
-              Engineered Specifically for Industrial Factory Owners
-            </h2>
-            <p className="mt-3 text-sm sm:text-base text-warm-600 leading-relaxed">
-              Every system is purpose-built in our Bhiwandi fabrication works to solve the practical everyday challenges of food processing: product spillage, manual weighing errors, sanitation audits, and machine downtime.
+          
+          {/* Section Header */}
+          <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-6 mb-12">
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-[1.8px] text-[#007f91] mb-2">
+                01 / OUR SOLUTIONS
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-1.8px] text-[#172b33] leading-[1.04]">
+                The right system.
+                <br />
+                <span className="text-[#66747a] font-normal">A better process.</span>
+              </h2>
+            </div>
+            <p className="text-sm text-[#66747a] max-w-md leading-relaxed">
+              Explore our range of handling and preparation solutions, designed around the demands of your production.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Wind,
-                title: 'Zero Material Spillage',
-                metric: 'Save 1.5% to 3%',
-                desc: 'Closed-loop pneumatic transfer pipelines eliminate airborne dust, floor spillage, and forklift traffic between warehouse and mixing halls.',
-              },
-              {
-                icon: Scale,
-                title: '±0.2% Gravimetric Lock',
-                metric: 'Zero Recipe Drift',
-                desc: 'Precision load-cell loss-in-weight batching and Coriolis mass flow meters remove operator weighing errors and maintain biscuit quality.',
-              },
-              {
-                icon: ShieldCheck,
-                title: 'SS304/316 Sanitary Build',
-                metric: 'Ra < 0.8 µm Polish',
-                desc: 'Certified TIG/orbital welded stainless steel contact parts, food-grade gaskets, and full CIP washdown readiness for clean sanitation audits.',
-              },
-              {
-                icon: Factory,
-                title: 'Direct In-House OEM',
-                metric: 'Bhiwandi Works',
-                desc: 'Direct access to founder & chief automation engineers Sachin and Sagar Tamhane with in-house fabrication, testing, and rapid spare parts.',
-              },
-            ].map((p, i) => {
-              const PIcon = p.icon;
-              return (
-                <motion.div
-                  key={p.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.4, delay: i * 0.08 }}
-                  className="rounded-2xl border border-warm-200 bg-warm-50/70 p-6 shadow-subtle hover:shadow-lg hover:border-teal-500/40 hover:bg-white transition-all group"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-colors mb-4">
-                    <PIcon className="h-6 w-6" />
-                  </div>
-                  <span className="font-mono text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
-                    {p.metric}
-                  </span>
-                  <h3 className="text-lg font-bold text-navy-900 mt-2.5 group-hover:text-teal-600 transition-colors">
-                    {p.title}
-                  </h3>
-                  <p className="text-xs text-warm-600 leading-relaxed mt-2">
-                    {p.desc}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Core Automation Modules with Interactive Category Filter */}
-      <section className="py-16 lg:py-24 bg-warm-50 border-b border-warm-200">
-        <div className="container-page">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-teal-600">Equipment Portfolio</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-navy-900 mt-1">Core Automation Modules</h2>
-              <p className="text-xs sm:text-sm text-warm-500 mt-1.5">
-                Heavy-duty skids engineered in-house for continuous industrial food manufacturing.
-              </p>
-            </div>
-
-            {/* Category Filter Pills */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              {[
-                { id: 'all', label: 'All Core Systems' },
-                { id: 'dosing-handling', label: 'Dosing & Handling' },
-                { id: 'preparation', label: 'Preparation & Mixing' },
-              ].map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => setSelectedCategory(c.id)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    selectedCategory === c.id
-                      ? 'bg-navy-900 text-white shadow-sm'
-                      : 'bg-warm-200/80 text-navy-800 hover:bg-warm-300'
-                  }`}
-                >
-                  {c.label}
-                </button>
-              ))}
-              <Button asChild variant="outline" size="sm" className="border-warm-300 text-navy-900 hover:bg-white font-semibold ml-1">
-                <Link to="/solutions">All 13 Systems <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
-              </Button>
-            </div>
+          {/* Filter Row */}
+          <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-[#dce3e3]">
+            <button
+              onClick={() => setFilterCategory('all')}
+              className={`px-4 py-2 text-xs font-semibold rounded-none border transition-all ${
+                filterCategory === 'all'
+                  ? 'bg-[#172b33] text-white border-[#172b33]'
+                  : 'bg-white text-[#172b33] border-[#dce3e3] hover:border-[#007f91]'
+              }`}
+            >
+              All systems <sup className="ml-1 text-[10px] text-[#007f91]">06</sup>
+            </button>
+            <button
+              onClick={() => setFilterCategory('dosing')}
+              className={`px-4 py-2 text-xs font-semibold rounded-none border transition-all ${
+                filterCategory === 'dosing'
+                  ? 'bg-[#172b33] text-white border-[#172b33]'
+                  : 'bg-white text-[#172b33] border-[#dce3e3] hover:border-[#007f91]'
+              }`}
+            >
+              Auto dosing
+            </button>
+            <button
+              onClick={() => setFilterCategory('preparation')}
+              className={`px-4 py-2 text-xs font-semibold rounded-none border transition-all ${
+                filterCategory === 'preparation'
+                  ? 'bg-[#172b33] text-white border-[#172b33]'
+                  : 'bg-white text-[#172b33] border-[#dce3e3] hover:border-[#007f91]'
+              }`}
+            >
+              Preparation
+            </button>
+            <a
+              href="#accessories"
+              className="ml-auto inline-flex items-center gap-1.5 text-xs font-semibold text-[#007f91] hover:underline"
+            >
+              Accessories <ArrowUpRight className="h-3.5 w-3.5" />
+            </a>
           </div>
 
-          {/* Product Cards Grid with Staggered Scroll-In */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredModules.map((item, idx) => (
-              <motion.div 
-                key={item.slug} 
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.45, delay: (idx % 3) * 0.08 }}
-                className="group flex flex-col rounded-2xl border border-warm-200 bg-white p-5 shadow-sm hover:shadow-xl hover:border-teal-500/50 transition-all duration-300"
+          {/* Product Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {filteredProducts.map((p) => (
+              <article
+                key={p.id}
+                className="group flex flex-col justify-between bg-white border border-[#dce3e3] p-5 rounded-none shadow-sm hover:shadow-md hover:border-[#007f91] transition-all"
               >
-                <div className="relative mb-4 h-48 overflow-hidden rounded-xl bg-warm-100">
-                  <img
-                    src={getProductImage(item.slug)}
-                    alt={item.name}
-                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div className="absolute top-2.5 left-2.5">
-                    <span className="rounded-md bg-navy-900/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
-                      {item.categoryLabel}
-                    </span>
+                <div>
+                  {/* Photo Container */}
+                  <div className="relative h-52 w-full overflow-hidden bg-[#f4f6f3] mb-4">
+                    <img
+                      src={p.photo}
+                      alt={p.name}
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center bg-white/90 text-[#172b33] group-hover:bg-[#007f91] group-hover:text-white transition-colors">
+                      <ArrowUpRight className="h-4 w-4" />
+                    </div>
                   </div>
-                  <div className="absolute bottom-2.5 right-2.5">
-                    <span className="rounded bg-black/75 backdrop-blur-sm px-2 py-0.5 text-[10px] font-mono text-teal-300 border border-teal-500/30">
-                      SS304/316
-                    </span>
-                  </div>
-                </div>
 
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-navy-900 group-hover:text-teal-600 transition-colors">
-                    {item.name}
+                  {/* Meta Tag */}
+                  <div className="flex items-center justify-between text-xs text-[#66747a] mb-2 font-mono">
+                    <span>{p.num}</span>
+                    <span className="uppercase text-[10px] font-bold text-[#007f91]">{p.categoryLabel}</span>
+                  </div>
+
+                  {/* Title & Summary */}
+                  <h3 className="text-lg font-bold text-[#172b33] group-hover:text-[#007f91] transition-colors">
+                    {p.name}
                   </h3>
-                  <p className="mt-2 text-xs text-warm-600 leading-relaxed line-clamp-3">
-                    {item.shortDescription}
+                  <p className="mt-2 text-xs text-[#66747a] leading-relaxed">
+                    {p.summary}
                   </p>
                 </div>
 
-                {/* Operating Spec Strip */}
-                <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-warm-50 p-2.5 border border-warm-200/70 text-center text-xs">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-warm-500">Operation</p>
-                    <p className="font-extrabold text-navy-900 text-[11px] mt-0.5">Continuous CIP</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-warm-500">Automation</p>
-                    <p className="font-extrabold text-teal-600 text-[11px] mt-0.5">PLC / SCADA</p>
-                  </div>
-                </div>
-
-                {/* Card Action Row */}
-                <div className="mt-5 pt-3.5 border-t border-warm-100 flex items-center justify-between">
-                  <Button asChild size="sm" variant="primary" className="text-xs font-bold">
-                    <Link to={`/contact?system=${item.slug}`}>
-                      Enquire
-                    </Link>
-                  </Button>
-
+                {/* Send Enquiry Link */}
+                <div className="mt-6 pt-3 border-t border-[#dce3e3]">
                   <Link
-                    to={`/systems/${item.slug}`}
-                    className="text-xs font-bold text-navy-800 hover:text-teal-600 flex items-center gap-1 group-hover:translate-x-1 transition-all"
+                    to={`/contact?system=${p.slug}`}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#007f91] group-hover:gap-2.5 transition-all"
                   >
-                    Technical Details <ChevronRight className="h-4 w-4" />
+                    Send an enquiry <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
-              </motion.div>
+              </article>
             ))}
           </div>
+
         </div>
       </section>
 
-      {/* Turnkey Project Execution Lifecycle (4 Steps for Buyers) */}
-      <section className="py-16 lg:py-24 bg-white border-b border-warm-200">
-        <div className="container-page">
-          <div className="max-w-3xl mx-auto text-center mb-14">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-600">The Commissioning Journey</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-navy-900 mt-1.5">
-              From Initial Floor Plan to Live Commissioning
+      {/* =========================================================================
+          OUR CUSTOMERS (Rhythm Client Section with Pause Toggle)
+          ========================================================================= */}
+      <section className="py-20 lg:py-24 bg-white border-b border-[#dce3e3] overflow-hidden" id="clients">
+        <div className="container-page flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[1.8px] text-[#007f91] mb-2">
+              OUR CUSTOMERS
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-1.8px] text-[#172b33] leading-[1.04]">
+              Trusted across production.
+              <br />
+              <span className="text-[#66747a] font-normal">In India and beyond.</span>
             </h2>
-            <p className="mt-3 text-sm sm:text-base text-warm-600 leading-relaxed">
-              We manage the entire project lifecycle in-house—ensuring seamless integration with your existing mixing hall equipment and strict adherence to project deadlines.
-            </p>
           </div>
+          <button
+            type="button"
+            onClick={() => setIsMarqueePaused(!isMarqueePaused)}
+            className="px-3 py-1.5 text-xs font-semibold rounded border border-[#dce3e3] bg-[#f4f6f3] text-[#172b33] hover:border-[#007f91] transition-colors flex items-center gap-1.5"
+          >
+            {isMarqueePaused ? <Play className="h-3 w-3 text-[#007f91]" /> : <Pause className="h-3 w-3 text-[#007f91]" />}
+            {isMarqueePaused ? 'Resume logo banners' : 'Pause logo banners'}
+          </button>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                step: '01',
-                title: 'Plant Survey & Sizing',
-                desc: 'We analyze your ingredient bulk densities, particle characteristics, throughput targets, and factory floor constraints.',
-              },
-              {
-                step: '02',
-                title: 'GA Layout CAD Drafting',
-                desc: 'Our design office prepares comprehensive 2D/3D General Arrangement drawings and pneumatic pressure line calculations.',
-              },
-              {
-                step: '03',
-                title: 'In-House Bhiwandi Works',
-                desc: 'Heavy stainless steel fabrication, TIG welding, and complete Factory Acceptance Testing (FAT) before dispatch.',
-              },
-              {
-                step: '04',
-                title: 'Site Erection & Training',
-                desc: 'Our mechanical engineers supervise site installation, piping erection, SCADA integration, and hands-on staff training.',
-              },
-            ].map((st, i) => (
-              <motion.div
-                key={st.step}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="relative rounded-2xl border border-warm-200 bg-warm-50/60 p-6 shadow-subtle"
-              >
-                <span className="font-mono text-2xl font-black text-teal-500/80">
-                  {st.step}
-                </span>
-                <h3 className="text-base font-bold text-navy-900 mt-3">
-                  {st.title}
-                </h3>
-                <p className="text-xs text-warm-600 leading-relaxed mt-2">
-                  {st.desc}
-                </p>
-              </motion.div>
-            ))}
+        {/* Domestic Row */}
+        <div className="mb-8">
+          <div className="container-page text-[10px] font-mono font-bold uppercase tracking-wider text-[#66747a] mb-3">
+            DOMESTIC CUSTOMERS
+          </div>
+          <div className="mask-marquee overflow-hidden">
+            <div className={`flex gap-4 ${isMarqueePaused ? '' : 'animate-marquee'}`}>
+              {[...domesticClients, ...domesticClients].map((c, i) => (
+                <div
+                  key={`dom-${i}`}
+                  className="flex h-16 w-36 sm:w-44 shrink-0 items-center justify-center p-2.5 rounded border border-[#dce3e3] bg-[#f4f6f3] hover:border-[#007f91] transition-colors"
+                >
+                  <img src={c.logo} alt={c.name} className="max-h-10 max-w-[120px] object-contain" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Industrial Track Record: Partners & Clients Dual Marquee */}
-      <ClientLogoGridSection />
-
-      {/* Senior Engineering Consultation & Layout Proposal Callout (Light Theme) */}
-      <section className="py-16 lg:py-24 bg-warm-50/70 border-b border-warm-200 relative overflow-hidden">
-        {/* Subtle Architectural Coordinate Accents */}
-        <div 
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(#0A1930_1px,transparent_1px)] [background-size:28px_28px] opacity-[0.035]" 
-          aria-hidden="true" 
-        />
-        
-        <div className="container-page relative z-10">
-          <div className="rounded-3xl border border-warm-200 bg-white p-6 sm:p-10 lg:p-12 shadow-elevated border-t-4 border-t-teal-500">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              
-              {/* Left Column: Commercial Proposition & GA Proposal */}
-              <div className="lg:col-span-7 space-y-5">
-                <div className="inline-flex items-center gap-2 rounded-full border border-warm-200 bg-warm-50 px-3 py-1 text-xs font-semibold text-navy-800 shadow-subtle">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>Direct Engineering Works • Bhiwandi Facility</span>
+        {/* International Row */}
+        <div>
+          <div className="container-page text-[10px] font-mono font-bold uppercase tracking-wider text-[#66747a] mb-3">
+            INTERNATIONAL CUSTOMERS
+          </div>
+          <div className="mask-marquee overflow-hidden">
+            <div className={`flex gap-4 ${isMarqueePaused ? '' : 'animate-marquee-reverse'}`}>
+              {[...internationalClients, ...internationalClients].map((c, i) => (
+                <div
+                  key={`intl-${i}`}
+                  className="flex h-16 w-36 sm:w-44 shrink-0 items-center justify-center p-2.5 rounded border border-[#dce3e3] bg-[#f4f6f3] hover:border-[#007f91] transition-colors"
+                >
+                  <img src={c.logo} alt={c.name} className="max-h-10 max-w-[120px] object-contain" />
                 </div>
-
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-navy-900 leading-tight">
-                  Planning a New Line or <br className="hidden sm:inline" />
-                  <span className="text-teal-500">Factory Floor Expansion?</span>
-                </h2>
-
-                <p className="text-sm sm:text-base text-warm-600 leading-relaxed max-w-xl">
-                  Send us your raw material specifications, line throughput targets (TPH), or factory drawings. Our chief engineers prepare an initial General Arrangement (GA) CAD layout drawing and pneumatic line sizing proposal.
-                </p>
-
-                {/* 3 Executive Trust Pillars */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-                  <div className="rounded-xl border border-warm-200 bg-warm-50/70 p-3.5 shadow-subtle">
-                    <Clock className="h-4 w-4 text-teal-600 mb-1.5" />
-                    <p className="text-xs font-bold text-navy-900">48-Hr Turnaround</p>
-                    <p className="text-[11px] text-warm-500 mt-0.5">Initial 2D/3D GA layout CAD drawings</p>
-                  </div>
-                  <div className="rounded-xl border border-warm-200 bg-warm-50/70 p-3.5 shadow-subtle">
-                    <ShieldCheck className="h-4 w-4 text-teal-600 mb-1.5" />
-                    <p className="text-xs font-bold text-navy-900">NDA Protected</p>
-                    <p className="text-[11px] text-warm-500 mt-0.5">Confidentiality guaranteed on proprietary recipes</p>
-                  </div>
-                  <div className="rounded-xl border border-warm-200 bg-warm-50/70 p-3.5 shadow-subtle">
-                    <Factory className="h-4 w-4 text-teal-600 mb-1.5" />
-                    <p className="text-xs font-bold text-navy-900">Direct OEM Leads</p>
-                    <p className="text-[11px] text-warm-500 mt-0.5">Zero sales agents; discuss directly with system designers</p>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <Button asChild size="lg" variant="primary" className="font-bold shadow-md hover:shadow-lg transition-all w-full sm:w-auto">
-                    <Link to="/contact">
-                      Request GA Layout Drawing <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                  <Button asChild size="lg" variant="outline" className="border-navy-200 text-navy-900 hover:bg-warm-100 font-semibold w-full sm:w-auto">
-                    <Link to="/about">
-                      Explore Our Works &amp; Heritage
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-
-              {/* Right Column: Direct Engineering Hotlines */}
-              <div className="lg:col-span-5">
-                <div className="rounded-2xl border border-warm-200 bg-warm-50/90 p-5 sm:p-6 shadow-subtle">
-                  <div className="flex items-center justify-between border-b border-warm-200 pb-3 mb-4">
-                    <div className="flex items-center gap-2">
-                      <PhoneCall className="h-4 w-4 text-teal-600" />
-                      <h3 className="text-xs font-bold text-navy-900 uppercase tracking-wider font-mono">
-                        Direct Chief Engineer Access
-                      </h3>
-                    </div>
-                    <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-bold">
-                      Bhiwandi OEM
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-warm-600 mb-4 leading-relaxed">
-                    Discuss line throughput, pneumatic conveying distances, and dosing recipes directly with our directors:
-                  </p>
-
-                  <div className="space-y-3">
-                    {/* Sachin Tamhane */}
-                    <div className="rounded-xl border border-warm-200 bg-white p-3.5 shadow-subtle hover:border-teal-500/50 hover:shadow-md transition-all">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="text-xs font-extrabold text-navy-900">Sachin Tamhane</p>
-                          <p className="text-[11px] text-teal-600 font-semibold">Director &amp; Technical Head</p>
-                        </div>
-                        <span className="text-[10px] font-mono text-warm-500 bg-warm-100 px-2 py-0.5 rounded">18+ Yrs Exp</span>
-                      </div>
-                      <div className="mt-2.5 flex items-center justify-between gap-2 pt-2 border-t border-warm-100">
-                        <a 
-                          href="tel:+919820646393"
-                          className="font-mono text-xs font-bold text-navy-900 hover:text-teal-600 transition-colors flex items-center gap-1.5"
-                        >
-                          <Phone className="h-3.5 w-3.5 text-teal-600" /> +91 98206 46393
-                        </a>
-                        <a
-                          href="https://wa.me/919820646393?text=Hello%20Sachin,%20we%20are%20planning%20a%20food%20automation%20project%20and%20would%20like%20to%20discuss%20system%20requirements."
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white px-2.5 py-1 text-[11px] font-bold border border-emerald-200 transition-colors flex items-center gap-1"
-                        >
-                          <MessageSquare className="h-3 w-3" /> WhatsApp
-                        </a>
-                      </div>
-                    </div>
-
-                    {/* Sagar Mallah */}
-                    <div className="rounded-xl border border-warm-200 bg-white p-3.5 shadow-subtle hover:border-teal-500/50 hover:shadow-md transition-all">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <p className="text-xs font-extrabold text-navy-900">Sagar Mallah</p>
-                          <p className="text-[11px] text-teal-600 font-semibold">Operations &amp; Automation Head</p>
-                        </div>
-                        <span className="text-[10px] font-mono text-warm-500 bg-warm-100 px-2 py-0.5 rounded">Plant Erection</span>
-                      </div>
-                      <div className="mt-2.5 flex items-center justify-between gap-2 pt-2 border-t border-warm-100">
-                        <a 
-                          href="tel:+919223242803"
-                          className="font-mono text-xs font-bold text-navy-900 hover:text-teal-600 transition-colors flex items-center gap-1.5"
-                        >
-                          <Phone className="h-3.5 w-3.5 text-teal-600" /> +91 92232 42803
-                        </a>
-                        <a
-                          href="https://wa.me/919223242803?text=Hello%20Sagar,%20we%20are%20planning%20a%20food%20automation%20project%20and%20would%20like%20to%20discuss%20system%20requirements."
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white px-2.5 py-1 text-[11px] font-bold border border-emerald-200 transition-colors flex items-center gap-1"
-                        >
-                          <MessageSquare className="h-3 w-3" /> WhatsApp
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Works location footer */}
-                  <div className="mt-4 pt-3 border-t border-warm-200 flex items-center justify-between text-[11px] text-warm-500">
-                    <span className="flex items-center gap-1 truncate max-w-[240px]">
-                      <MapPin className="h-3.5 w-3.5 text-teal-600 shrink-0" /> Bhiwandi, Thane, Maharashtra
-                    </span>
-                    <a 
-                      href="mailto:logicequip@gmail.com"
-                      className="hover:text-teal-600 transition-colors font-medium text-navy-800 flex items-center gap-1"
-                    >
-                      <Mail className="h-3.5 w-3.5 text-teal-600" /> Email Inquiry
-                    </a>
-                  </div>
-                </div>
-              </div>
-
+              ))}
             </div>
           </div>
         </div>
       </section>
+
+      {/* =========================================================================
+          02 / WHY NEW LOGIC (Rhythm About Section)
+          ========================================================================= */}
+      <section className="py-20 lg:py-28 bg-[#f4f6f3] border-b border-[#dce3e3]" id="about">
+        <div className="container-page">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            
+            {/* Left Photo Column */}
+            <div className="lg:col-span-5">
+              <div className="relative border border-[#dce3e3] bg-white p-2 shadow-md">
+                <img
+                  src="/rhythm-photos/flour.jpg"
+                  alt="Flour handling equipment and pipework"
+                  className="w-full h-80 sm:h-96 object-cover"
+                />
+                <div className="pt-3 px-2 flex items-center justify-between text-[11px] font-mono font-bold text-[#66747a]">
+                  <span>BUILT AROUND YOUR REQUIREMENTS</span>
+                  <ArrowUpRight className="h-4 w-4 text-[#007f91]" />
+                </div>
+              </div>
+            </div>
+
+            {/* Right Copy & Benefits Column */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="text-[10px] font-bold uppercase tracking-[1.8px] text-[#007f91]">
+                02 / WHY NEW LOGIC
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-1.8px] text-[#172b33] leading-[1.04]">
+                Practical engineering.
+                <br />
+                <span className="text-[#66747a] font-normal">From start to finish.</span>
+              </h2>
+
+              <p className="text-sm sm:text-base text-[#66747a] leading-relaxed">
+                Based in Bhiwandi, India, New Logic Automation provides end-to-end raw material handling solutions for food and process industries.
+              </p>
+
+              <p className="text-sm sm:text-base text-[#66747a] leading-relaxed">
+                From customised equipment to installation, commissioning and servicing, we bring engineering and support together for your production needs.
+              </p>
+
+              {/* 3 Benefit Rows */}
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center justify-between p-4 bg-white border border-[#dce3e3] hover:border-[#007f91] transition-colors">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-sm font-bold text-[#007f91]">01</span>
+                    <h3 className="text-sm font-bold text-[#172b33]">Customised equipment</h3>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 text-[#66747a]" />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-white border border-[#dce3e3] hover:border-[#007f91] transition-colors">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-sm font-bold text-[#007f91]">02</span>
+                    <h3 className="text-sm font-bold text-[#172b33]">Quality assurance</h3>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 text-[#66747a]" />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-white border border-[#dce3e3] hover:border-[#007f91] transition-colors">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-sm font-bold text-[#007f91]">03</span>
+                    <h3 className="text-sm font-bold text-[#172b33]">Technical support &amp; know-how</h3>
+                  </div>
+                  <ArrowUpRight className="h-4 w-4 text-[#66747a]" />
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          ACCESSORIES BANNER (Rhythm Accessories)
+          ========================================================================= */}
+      <section className="py-12 bg-white border-b border-[#dce3e3]" id="accessories">
+        <div className="container-page flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <div className="text-[10px] font-bold uppercase tracking-[1.8px] text-[#007f91] mb-1">
+              COMPONENTS THAT COMPLETE THE SYSTEM
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#172b33]">
+              Every detail counts.
+            </h2>
+            <p className="mt-1 text-xs text-[#66747a]">
+              Gear pumps &middot; Roots blowers &middot; Valves &middot; Filters
+            </p>
+          </div>
+          <Button asChild className="rounded-full h-12 w-12 p-0 bg-[#007f91] hover:bg-[#006675] text-white shrink-0">
+            <Link to="/contact?system=accessories" aria-label="Enquire about accessories">
+              <ArrowUpRight className="h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          03 / LET’S CONNECT (Rhythm Contact Section)
+          ========================================================================= */}
+      <section className="py-20 lg:py-28 bg-[#f4f6f3]" id="contact">
+        <div className="container-page">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            
+            {/* Left Contact Info */}
+            <div className="lg:col-span-5 space-y-6">
+              <div className="text-[10px] font-bold uppercase tracking-[1.8px] text-[#007f91]">
+                03 / LET&rsquo;S CONNECT
+              </div>
+
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-1.8px] text-[#172b33] leading-[1.04]">
+                Tell us what
+                <br />
+                your process
+                <br />
+                <em className="not-italic text-[#007f91]">needs.</em>
+              </h2>
+
+              <p className="text-sm text-[#66747a] leading-relaxed">
+                Share your requirement with our team.
+                <br />
+                Let&rsquo;s find the right system for your application.
+              </p>
+
+              <div className="space-y-3 pt-2">
+                <a
+                  href="tel:+919820646393"
+                  className="flex items-center gap-2 text-lg font-bold text-[#172b33] hover:text-[#007f91] transition-colors"
+                >
+                  +91 98206 46393
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="mailto:logicequip@gmail.com"
+                  className="block text-sm font-mono text-[#66747a] hover:text-[#007f91] transition-colors"
+                >
+                  logicequip@gmail.com
+                </a>
+              </div>
+            </div>
+
+            {/* Right Interactive Form */}
+            <div className="lg:col-span-7">
+              <div className="p-6 sm:p-8 bg-white border border-[#dce3e3] shadow-md">
+                <h3 className="text-lg font-bold text-[#172b33] mb-4">
+                  Start a conversation
+                </h3>
+
+                {submitted ? (
+                  <div className="p-6 bg-[#f4f6f3] border border-[#007f91]/30 text-center space-y-3">
+                    <Check className="h-8 w-8 text-[#007f91] mx-auto" />
+                    <h4 className="text-sm font-bold text-[#172b33]">Requirement Drafted</h4>
+                    <p className="text-xs text-[#66747a]">
+                      Your email client has been opened with your inquiry addressed to <strong>logicequip@gmail.com</strong>.
+                    </p>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-xs"
+                      onClick={() => setSubmitted(false)}
+                    >
+                      Send Another Message
+                    </Button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleEnquirySubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#172b33] uppercase tracking-wider mb-1">
+                          Your Name *
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Full name"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          className="w-full border border-[#dce3e3] bg-[#f4f6f3] px-3.5 py-2.5 text-xs text-[#172b33] focus:border-[#007f91] focus:bg-white focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#172b33] uppercase tracking-wider mb-1">
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          required
+                          placeholder="Your contact number"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          className="w-full border border-[#dce3e3] bg-[#f4f6f3] px-3.5 py-2.5 text-xs text-[#172b33] focus:border-[#007f91] focus:bg-white focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-[#172b33] uppercase tracking-wider mb-1">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        placeholder="work@company.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full border border-[#dce3e3] bg-[#f4f6f3] px-3.5 py-2.5 text-xs text-[#172b33] focus:border-[#007f91] focus:bg-white focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-[#172b33] uppercase tracking-wider mb-1">
+                        What does your process need? *
+                      </label>
+                      <textarea
+                        rows={4}
+                        required
+                        placeholder="Ingredients handled, plant throughput, batch frequency, or upgrade plans..."
+                        value={formData.requirement}
+                        onChange={(e) => setFormData({ ...formData, requirement: e.target.value })}
+                        className="w-full border border-[#dce3e3] bg-[#f4f6f3] px-3.5 py-2.5 text-xs text-[#172b33] focus:border-[#007f91] focus:bg-white focus:outline-none resize-none"
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className="w-full bg-[#007f91] hover:bg-[#006675] text-white font-bold py-3 text-xs rounded-none transition-all flex items-center justify-center gap-2"
+                    >
+                      <Send className="h-3.5 w-3.5" /> Send your requirement
+                    </Button>
+                  </form>
+                )}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

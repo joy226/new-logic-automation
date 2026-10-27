@@ -6,7 +6,6 @@ import {
   Search, 
   X, 
   ChevronRight, 
-  Sparkles,
   SlidersHorizontal
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
@@ -73,14 +72,7 @@ export function SolutionsPage2() {
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-teal-600 to-teal-400 z-50 pointer-events-none"
       />
 
-      <div className="bg-warm-50 text-navy-900 font-sans min-h-screen">
-        {/* Template 2 Header Banner */}
-        <div className="bg-navy-900 text-white py-2 px-4 text-center text-xs font-medium border-b border-navy-800">
-          <span className="inline-flex items-center gap-1.5 text-teal-400 font-bold">
-            <Sparkles className="h-3.5 w-3.5" /> Template 2:
-          </span>{' '}
-          <span className="text-warm-300">Modern Engineering Equipment Catalogue &amp; Interactive Filters</span>
-        </div>
+      <div className="bg-[#f4f6f3] text-[#172b33] font-sans min-h-screen">
 
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-white border-b border-warm-200 py-12 lg:py-16">
