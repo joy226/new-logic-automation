@@ -10,18 +10,14 @@ import {
   Award, 
   Clock, 
   Cpu, 
-  Settings2, 
   Workflow, 
   CheckCircle2, 
-  Sparkles,
-  Phone,
-  Mail
+  Sparkles
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { images } from '@/lib/images';
-import { siteConfig } from '@/data/site';
 import { ClientLogoGridSection } from '@/components/common/ClientLogoGridSection';
 
 interface MilestoneStage {

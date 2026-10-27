@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { TemplateLink as Link } from '@/context/TemplateContext';
 import { Home, Search, ArrowRight } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';

@@ -8,12 +8,9 @@ import {
   Layers, 
   ArrowRight, 
   ShieldCheck, 
-  Gauge, 
   CheckCircle2, 
   ChevronRight,
-  Sparkles,
-  Cpu,
-  Activity
+  Sparkles
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -160,7 +157,6 @@ export function InteractivePlantFlow() {
   }, [isPaused]);
 
   const activeStage = plantStages[activeIdx];
-  const Icon = activeStage.icon;
 
   return (
     <section 
@@ -200,7 +196,6 @@ export function InteractivePlantFlow() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3 p-1.5 rounded-2xl bg-warm-100/80 border border-warm-200">
             {plantStages.map((stage, idx) => {
               const isActive = activeIdx === idx;
-              const StageIcon = stage.icon;
 
               return (
                 <button

@@ -1,4 +1,5 @@
-import { Link, useParams, Navigate } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
+import { TemplateLink as Link } from '@/context/TemplateContext';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, CheckCircle2, Phone, Mail, ChevronRight,

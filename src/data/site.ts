@@ -5,18 +5,44 @@ export const siteConfig = {
   description:
     'Integrated material handling, dosing and preparation systems for food and process industries.',
   email: 'logicequip@gmail.com',
+  foundedYear: '2006',
+  businessHours: {
+    general: 'Monday – Saturday, 8:00 AM – 6:00 PM IST',
+    direct: 'Monday – Friday, 9:00 AM – 7:00 PM IST',
+  },
   phoneNumbers: [
     { name: 'Sachin Tamhane', number: '+91 9820646393' },
     { name: 'Sagar Mallah', number: '+91 9223242803' },
   ],
+  founders: [
+    {
+      name: 'Mr. Sachin Tamhane',
+      role: 'Founding Partner',
+      phone: '+91 9820646393',
+      experience: '17+ years in industrial raw material handling and automation systems',
+    },
+    {
+      name: 'Mr. Sagar Mallah',
+      role: 'Founding Partner',
+      phone: '+91 9223242803',
+      experience: '17+ years in food-processing automation and process plant execution',
+    },
+  ],
   address: {
-    line1: 'Building B2, Gala No. 3, Parasnath Complex',
-    line2: 'Anjur Mankoli Road, Village Val',
-    city: 'Bhiwandi, Thane',
+    line1: 'Bldg. No B2, Gala No. 3, Parasnath Complex',
+    line2: 'Anjur Mankoli Road, Village Val, Taluka Bhiwandi',
+    city: 'Thane District',
     state: 'Maharashtra',
     pincode: '421302',
     country: 'India',
   },
+  capabilities: [
+    'Design & Engineering',
+    'Equipment Manufacturing',
+    'On-Site Installation',
+    'Plant Commissioning',
+    'Servicing & Spare Parts',
+  ],
   customersDomestic: [
     'Britannia Industries Ltd.',
     'ITC Ltd.',

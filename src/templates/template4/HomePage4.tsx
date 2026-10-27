@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { TemplateLink as Link } from '@/context/TemplateContext';
-import { ArrowRight, Filter, Search, CheckCircle2, FileText, Phone, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { products, categoryLabels, type ProductCategory } from '@/data/products';
+import { getProductImage } from '@/lib/images';
 
 export function HomePage4() {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>('all');
@@ -89,14 +90,14 @@ export function HomePage4() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((item) => (
               <div
-                key={item.id}
+                key={item.slug}
                 className="rounded-xl border border-warm-200 bg-white p-5 shadow-sm hover:shadow-md hover:border-teal-500/50 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="h-44 w-full rounded-lg overflow-hidden bg-warm-100 mb-4">
                     <img
-                      src={item.image}
-                      alt={item.title}
+                      src={getProductImage(item.slug)}
+                      alt={item.name}
                       className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
                     />
                   </div>
@@ -105,9 +106,9 @@ export function HomePage4() {
                       {categoryLabels[item.category]}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-navy-900">{item.title}</h3>
+                  <h3 className="text-base font-bold text-navy-900">{item.name}</h3>
                   <p className="mt-2 text-xs text-warm-600 line-clamp-2 leading-relaxed">
-                    {item.description}
+                    {item.shortDescription}
                   </p>
                 </div>
 

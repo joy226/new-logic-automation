@@ -5,28 +5,22 @@ import {
   ArrowRight, 
   Factory, 
   ShieldCheck, 
-  Gauge, 
   Sparkles, 
   ChevronRight, 
   Activity, 
   Cpu, 
   CheckCircle2, 
   Scale, 
-  Wrench, 
   Clock, 
-  Layers, 
-  FileText, 
   PhoneCall, 
   Phone,
   Mail,
   MapPin,
   MessageSquare,
-  Check,
   Wind
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { products, type ProductCategory, categoryLabels } from '@/data/products';
+import { products } from '@/data/products';
 import { images, getProductImage } from '@/lib/images';
 import { InteractivePlantFlow } from './components/InteractivePlantFlow';
 import { ClientLogoGridSection } from '@/components/common/ClientLogoGridSection';

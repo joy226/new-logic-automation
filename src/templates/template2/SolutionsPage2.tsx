@@ -1,35 +1,22 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
+import { motion, useScroll, useSpring } from 'framer-motion';
 import { TemplateLink as Link } from '@/context/TemplateContext';
 import { 
   Search, 
   X, 
-  ArrowRight, 
   ChevronRight, 
-  Package, 
-  Settings2, 
-  Wrench, 
-  Gauge, 
-  ShieldCheck, 
   Sparkles,
   SlidersHorizontal
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { products, categoryLabels, categoryDescriptions, type ProductCategory } from '@/data/products';
+import { products, categoryLabels, type ProductCategory } from '@/data/products';
 import { getProductImage } from '@/lib/images';
 
 const categoryOrder: ProductCategory[] = ['dosing-handling', 'preparation', 'accessories'];
-
-const categoryIcons: Record<ProductCategory, React.ElementType> = {
-  'dosing-handling': Package,
-  'preparation': Settings2,
-  'accessories': Wrench,
-};
 
 export function SolutionsPage2() {
   const [searchParams, setSearchParams] = useSearchParams();

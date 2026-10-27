@@ -1,5 +1,6 @@
 import { useMemo, useEffect } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { TemplateLink as Link } from '@/context/TemplateContext';
 import { motion } from 'framer-motion';
 import { Search, X, ArrowRight, Package, Settings2, Wrench } from 'lucide-react';
 import { SEO } from '@/components/SEO';
@@ -8,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { SmartImage } from '@/components/ui/smart-image';
 import { cn } from '@/lib/utils';
 import { images } from '@/lib/images';
-import { products, categoryLabels, categoryDescriptions, type ProductCategory } from '@/data/products';
+import { products, categoryLabels, type ProductCategory } from '@/data/products';
 
 const categoryOrder: ProductCategory[] = ['dosing-handling', 'preparation', 'accessories'];
 const categoryIcons: Record<ProductCategory, React.ElementType> = {

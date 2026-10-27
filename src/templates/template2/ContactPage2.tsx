@@ -5,13 +5,9 @@ import {
   Phone, 
   Mail, 
   MapPin, 
-  Clock, 
   ShieldCheck, 
-  FileText, 
   Sparkles,
-  ArrowRight,
-  Factory,
-  MessageSquare
+  Factory
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { EnquiryForm } from '@/components/EnquiryForm';
@@ -105,7 +101,7 @@ export function ContactPage2() {
                       >
                         <div>
                           <p className="text-xs font-bold text-navy-900">{p.name}</p>
-                          <p className="text-xs text-warm-500 mt-0.5">{p.role}</p>
+                          <p className="text-xs text-warm-500 mt-0.5">{p.name === 'Sachin Tamhane' ? 'Founding Partner' : 'Co-Founder & Technical Lead'}</p>
                           <p className="text-sm font-extrabold text-teal-600 group-hover:text-teal-700 mt-1 font-mono">
                             {p.number}
                           </p>
@@ -122,7 +118,7 @@ export function ContactPage2() {
                     >
                       <div>
                         <p className="text-xs font-bold text-navy-900">Technical Proposals &amp; CAD</p>
-                        <p className="text-xs text-warm-500 mt-0.5">Send project specifications &amp; DWG files</p>
+                        <p className="text-xs text-warm-500 mt-0.5">Send project specifications &amp; layout queries</p>
                         <p className="text-sm font-extrabold text-teal-600 group-hover:text-teal-700 mt-1 font-mono">
                           {siteConfig.email}
                         </p>
@@ -140,10 +136,10 @@ export function ContactPage2() {
                     <Factory className="h-4 w-4 text-teal-600" /> Manufacturing Works &amp; HQ
                   </h3>
                   <div className="text-xs text-warm-600 leading-relaxed space-y-1">
-                    <p className="font-semibold text-navy-800">{siteConfig.address.company}</p>
-                    <p>{siteConfig.address.street}</p>
-                    <p>{siteConfig.address.area}, {siteConfig.address.city} – {siteConfig.address.pincode}</p>
-                    <p>{siteConfig.address.state}, {siteConfig.address.country}</p>
+                    <p className="font-semibold text-navy-800">{siteConfig.name}</p>
+                    <p>{siteConfig.address.line1}</p>
+                    <p>{siteConfig.address.line2}</p>
+                    <p>{siteConfig.address.city}, {siteConfig.address.state} – {siteConfig.address.pincode}, {siteConfig.address.country}</p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-warm-100 flex items-center justify-between text-[11px] text-warm-500">
                     <span className="flex items-center gap-1 font-semibold text-navy-900">
@@ -178,7 +174,7 @@ export function ContactPage2() {
                     </p>
                   </div>
 
-                  <EnquiryForm preselectedProduct={systemParam} />
+                  <EnquiryForm defaultSystem={systemParam} />
                 </div>
               </div>
             </div>

@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils';
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'teal' | 'accent' | 'outline';
+  variant?: 'default' | 'secondary' | 'teal' | 'accent' | 'outline';
 }
 
 export function Badge({ className, variant = 'default', ...props }: BadgeProps) {
   const variants = {
     default: 'bg-warm-100 text-warm-600',
+    secondary: 'bg-warm-100 text-navy-800 border border-warm-200',
     teal: 'bg-teal-50 text-teal-700 border border-teal-100',
     accent: 'bg-accent-50 text-accent-700 border border-accent-100',
     outline: 'border border-warm-200 text-warm-500',

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { TemplateLink as Link } from '@/context/TemplateContext';
@@ -6,23 +6,17 @@ import {
   ArrowRight, 
   CheckCircle2, 
   ChevronRight, 
-  Gauge, 
   ShieldCheck, 
-  Cpu, 
   Layers, 
   Workflow, 
   Sparkles,
-  Phone,
-  Mail,
-  Printer,
-  Download,
-  Activity
+  Phone
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { getProductBySlug, getRelatedProducts } from '@/data/products';
-import { getProductImage, images } from '@/lib/images';
+import { getProductImage } from '@/lib/images';
 import { siteConfig } from '@/data/site';
 import { EnquiryForm } from '@/components/EnquiryForm';
 
@@ -255,7 +249,7 @@ export function SystemPage2() {
                     </p>
                   </div>
 
-                  <EnquiryForm preselectedProduct={product.name} />
+                  <EnquiryForm defaultSystem={product.slug} />
                 </div>
               </div>
             </div>
